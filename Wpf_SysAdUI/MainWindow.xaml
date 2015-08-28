@@ -153,13 +153,13 @@
                     </Rectangle>
                     <TextBlock Name="Account_name" Margin="4 0 0 0"
                    VerticalAlignment="Center"
-                     Text="AccountName IN" Visibility="Hidden"/>
+                     Text="AccountName IN" Visibility="Collapsed"/>
                 </StackPanel>
             </Button>
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
     <Grid x:Name="Main">
-        <Grid x:Name="LogIn" Background="#2196F3" Visibility="Collapsed" RenderTransformOrigin="0.5,0.5">
+        <Grid x:Name="LogIn" Background="#2196F3" Visibility="Visible" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TranslateTransform/>
             </Grid.RenderTransform>
@@ -181,7 +181,7 @@
 
         </Grid>
         <Grid>
-            <Grid Name="SlideBar"  Width="90" Background="#FF5252FD" ClipToBounds="True" MouseEnter="SlideBar_MouseEnter" MouseLeave="SlideBar_MouseLeave" Panel.ZIndex="1" HorizontalAlignment="Left" Opacity="100" Visibility="Visible">
+            <Grid Name="SlideBar"  Width="90" Background="#FF5252FD" ClipToBounds="True" MouseEnter="SlideBar_MouseEnter" MouseLeave="SlideBar_MouseLeave" Panel.ZIndex="1" HorizontalAlignment="Left" Opacity="0" Visibility="Collapsed">
                 <Image Source="{StaticResource Logo}" Margin="10,23,10,537" HorizontalAlignment="Center"/>
 
                 <StackPanel Name="home_pan" Orientation="Horizontal" Margin="0,174,0,432" Background="#FF2E9CDA" MouseEnter="home_pan_MouseEnter" MouseLeave="home_pan_MouseLeave" MouseDown="home_pan_MouseDown">
@@ -209,17 +209,17 @@
                     <Label FontSize="25" Foreground="White" Content="Settings" VerticalAlignment="Center" Margin="10,0,0,0"/>
                 </StackPanel>
             </Grid>
-            <Grid Name="Inner_UIMain" Opacity="100" Visibility="Visible">
+            <Grid Name="Inner_UIMain" Opacity="0" Visibility="Collapsed">
                 <Rectangle Margin="110,150,20,20" Stroke="#FF1D97FD"/>
                 <Controls:ToggleSwitch Margin="694,99,179,526" ThumbIndicatorBrush="#FF383A3C" OffSwitchBrush="#CC119EDA" OnSwitchBrush="#CC21F075" Foreground="#FFCB6F5B"/>
                 <Label FontSize="15.8" Foreground="#FFCB6F5B" Content="Edit Mode:" Margin="608,101,232,536" FontWeight="SemiBold"/>
 
-                <Grid Name="HomeUI_inner" Margin="110,150,20,20" Opacity="0" Visibility="Collapsed">
+                <Grid Name="HomeUI_inner" Margin="110,150,20,20" Opacity="100" Visibility="Collapsed">
                     <StackPanel Margin="10,10,10,381" Height="110" Background="#FFD0E0F7" Orientation="Horizontal">
                         <Path Style="{StaticResource InfoIcon}" Fill="#FF9696F9" Margin="99.167,16.416,0,16.416" Stretch="Fill" Height="77.168" Width="79.833"/>
                         <Label FontSize="30" Content="Your current power usage is HIGH" Foreground="#FFBB6767" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40,0,0,0"/>
                     </StackPanel>
-                    <ListView Margin="10,138,10,120" Name="lvUsers">
+                    <ListView Margin="10,138,10,120" Name="lvUsers" SelectionChanged="lvUsers_SelectionChanged">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Date" Width="120" DisplayMemberBinding="{Binding DateString}" />
@@ -229,13 +229,24 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+                    <Label  Foreground="#FF294E7A" FontSize="18" Content="Date:" Margin="20,382,720,88"/>
+                    <Label  Foreground="#FF294E7A" FontSize="18" Content="Time:" Margin="20,414,720,57"/>
+                    <Label  Foreground="#FF294E7A" FontSize="18" Content="User:" Margin="20,447,720,24"/>
+                    <Label  Foreground="#FF294E7A" FontSize="18" Content="Event:" Margin="370,382,400,88"/>
+                    <Label Name="home_date_lbl" Foreground="#FF294E7A" FontSize="18" Margin="114,386,469,84"/>
+                    <Label Name="home_time_lbl" Foreground="#FF294E7A" FontSize="18" Margin="114,414,469,57"/>
+                    <Label Name="home_user_lbl" Foreground="#FF294E7A" FontSize="18" Margin="114,447,469,24"/>
+                    <Label Name="home_event_lbl" Foreground="#FF294E7A" FontSize="18" Margin="438,386,10,24" ScrollViewer.CanContentScroll="True" UseLayoutRounding="True"/>
                 </Grid>
 
                 <Grid Name="StatUI_inner" Margin="110,150,20,20" Opacity="100" Visibility="Collapsed">
-
+                    <ScrollViewer Margin="10" VerticalScrollBarVisibility="Auto">
+                        <WrapPanel Name="Stat_stack" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        </WrapPanel>
+                    </ScrollViewer>
                 </Grid>
-                <Grid Name="RepUI_inner" Margin="110,154,20,16" Opacity="100" Visibility="Visible">
-                    <ListView Margin="10,238,10,73" Name="reports" Opacity="0" Visibility="Visible" IsEnabled="False">
+                <Grid Name="RepUI_inner" Margin="110,154,20,16" Opacity="100" Visibility="Collapsed">
+                    <ListView Margin="10,238,10,73" Name="reports" Opacity="0" Visibility="Collapsed" IsEnabled="False">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Date" Width="120" DisplayMemberBinding="{Binding DateString}" />
@@ -301,7 +312,11 @@
                     </Button>
                 </Grid>
                 <Grid Name="AppdUI_inner" Margin="110,150,20,20" Opacity="100" Visibility="Collapsed">
-
+                    <ScrollViewer Margin="10" VerticalScrollBarVisibility="Auto">
+                        <WrapPanel Name="App_stack" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                            <Controls:Tile Name="AppUI_add_tile" FontSize="90" Content="+" Background="#CC43B2E2" Margin="5"  HorizontalAlignment="Left" VerticalAlignment="Top" Click="AppUI_add_tile_Click" />
+                        </WrapPanel>
+                    </ScrollViewer>
                 </Grid>
                 <Grid Name="SetdUI_inner" Margin="110,150,20,20" Opacity="100" Visibility="Collapsed">
                     <Label  Foreground="#FF294E7A" FontSize="35" Content="SETTINGS" Margin="25,10,604,426"/>
@@ -335,11 +350,10 @@
                         <StackPanel.BitmapEffect>
                             <DropShadowBitmapEffect Color="Black" Direction="320" Softness="0.15" ShadowDepth="6" Opacity="0.5" />
                         </StackPanel.BitmapEffect>
-                        <StackPanel Name="AccExpander_CNA_pan" Height="28" Margin="23,0,0,0" Background="#FFBBD4F3" MouseEnter="AccExpander_CNA_pan_MouseEnter" MouseLeave="AccExpander_CNA_pan_MouseLeave" >
+                        <StackPanel Name="AccExpander_CNA_pan" Height="28" Margin="23,0,0,0" Background="#FFBBD4F3" MouseEnter="AccExpander_CNA_pan_MouseEnter" MouseLeave="AccExpander_CNA_pan_MouseLeave" MouseDown="AccExpander_CNA_pan_MouseDown" >
                             <Label FontSize="12"  Content="Create New Account" VerticalAlignment="Bottom" HorizontalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="7,3,4,0"/>
-
                         </StackPanel>
-                        <StackPanel Name="AccExpander_CP_pan" Height="28" Margin="23,0,0,0" Background="#FFBBD4F3" MouseEnter="AccExpander_CP_pan_MouseEnter" MouseLeave="AccExpander_CP_pan_MouseLeave">
+                        <StackPanel Name="AccExpander_CP_pan" Height="28" Margin="23,0,0,0" Background="#FFBBD4F3" MouseEnter="AccExpander_CP_pan_MouseEnter" MouseLeave="AccExpander_CP_pan_MouseLeave" MouseDown="AccExpander_CP_pan_MouseDown">
                             <Label FontSize="12"  Content="Change Password" VerticalAlignment="Bottom" HorizontalAlignment="Center" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="6,3,21,0"/>
                         </StackPanel>
                         <StackPanel Name="AccExpander_LO_pan" Height="28" Margin="23,1,0,0" Background="#FFBBD4F3" MouseEnter="AccExpander_LO_pan_MouseEnter" MouseLeave="AccExpander_LO_pan_MouseLeave" MouseLeftButtonDown="AccExpander_LO_pan_MouseLeftButtonDown">

@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using System.Windows.Threading;
+
 namespace Wpf_SysAdUI
 {
     /// <summary>
@@ -65,6 +66,7 @@ namespace Wpf_SysAdUI
             };
             SlideBar.Visibility = Visibility.Visible;
             Inner_UIMain.Visibility = Visibility.Visible;
+            HomeUI_inner.Visibility = Visibility.Visible;
             AnimationSet.Add(LogIn, AnimationKind.TranslateX, AnimationFactory.Create(AnimationType.DoubleAnimation, 970.0, TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(0)));
             AnimationSet.Run();
             Account_name.Text = User_tb_login.Text;
@@ -199,6 +201,19 @@ namespace Wpf_SysAdUI
                 AnimationSet.Run();
                 Account_name.Visibility = Visibility.Collapsed;
                 Expander.IsExpanded = false;
+                HomeUI_inner.Visibility = Visibility.Collapsed;
+                StatUI_inner.Visibility = Visibility.Collapsed;
+                RepUI_inner.Visibility = Visibility.Collapsed;
+                SchedUI_inner.Visibility = Visibility.Collapsed;
+                AppdUI_inner.Visibility = Visibility.Collapsed;
+                SetdUI_inner.Visibility = Visibility.Collapsed;
+                Inner_UIMain.Visibility = Visibility.Collapsed;
+                home_pan.Background = new SolidColorBrush(Color.FromRgb(46, 156, 218));
+                stat_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                rep_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                sched_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                app_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                set_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
                 pass_login.Clear();
             
             }
@@ -353,46 +368,76 @@ namespace Wpf_SysAdUI
         private void viewSched_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(viewSched_btn, 0.0, TimeSpan.FromSeconds(0));
+            
         }
 
         private void createSched_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(createSched_btn, 0.0, TimeSpan.FromSeconds(0));
+            
         }
 
         private void editSched_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(editSched_btn, 0.0, TimeSpan.FromSeconds(0));
+            
         }
 
         private void delSched_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(delSched_btn, 0.0, TimeSpan.FromSeconds(0));
+            
         }
 
         private void viewSched_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(viewSched_btn, 0.5, TimeSpan.FromSeconds(0));
+            ManageSched m = new ManageSched();
+            m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.ToString();
+            m.create_btn.Visibility = Visibility.Collapsed;
+            m.delete_btn.Visibility = Visibility.Collapsed;
+            m.edit_btn.Visibility = Visibility.Collapsed;
+            m.save_btn.Visibility = Visibility.Collapsed;
+            m.ShowDialog();
         }
 
         private void createSched_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(createSched_btn, 0.5, TimeSpan.FromSeconds(0));
+            ManageSched m= new ManageSched();
+            m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.ToString();
+            m.delete_btn.Visibility = Visibility.Collapsed;
+            m.edit_btn.Visibility = Visibility.Collapsed;
+            m.save_btn.Visibility = Visibility.Collapsed;
+            m.ShowDialog();
         }
 
         private void editSched_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(editSched_btn, 0.5, TimeSpan.FromSeconds(0));
+            ManageSched m = new ManageSched();
+            m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.ToString();
+            m.delete_btn.Visibility = Visibility.Collapsed;
+            m.create_btn.Visibility = Visibility.Collapsed;
+            m.ShowDialog();
         }
 
         private void delSched_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(delSched_btn, 0.5, TimeSpan.FromSeconds(0));
+            ManageSched m = new ManageSched();
+            m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.ToString();
+            m.create_btn.Visibility = Visibility.Collapsed;
+            m.edit_btn.Visibility = Visibility.Collapsed;
+            m.save_btn.Visibility = Visibility.Collapsed;
+            m.ShowDialog();
         }
 
         private void RepUI_D_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            
             reports.IsEnabled = true;
+            reports.Visibility = Visibility.Visible;
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
@@ -422,6 +467,7 @@ namespace Wpf_SysAdUI
         private void RepUI_W_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             reports.IsEnabled = true;
+            reports.Visibility = Visibility.Visible;
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
@@ -450,6 +496,7 @@ namespace Wpf_SysAdUI
         private void RepUI_M_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             reports.IsEnabled = true;
+            reports.Visibility = Visibility.Visible;
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
@@ -478,6 +525,7 @@ namespace Wpf_SysAdUI
         private void RepUI_Y_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             reports.IsEnabled = true;
+            reports.Visibility = Visibility.Visible;
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
@@ -506,6 +554,7 @@ namespace Wpf_SysAdUI
         private void RepUI_C_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             reports.IsEnabled = true;
+            reports.Visibility = Visibility.Visible;
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
@@ -535,15 +584,17 @@ namespace Wpf_SysAdUI
         {
             AnimationSet.Completed += (object s, EventArgs ex) =>
             {
-                AnimationSet.Add(tiles_grid, AnimationKind.TranslateY, AnimationFactory.Create(AnimationType.DoubleAnimation, 0.0, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(0)));
+                AnimationSet.Add(property_lbl, AnimationKind.TranslateY, AnimationFactory.Create(AnimationType.DoubleAnimation, 0.0, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(0)));
                 AnimationSet.Add(close_btn, AnimationKind.Opacity, AnimationFactory.Create(AnimationType.DoubleAnimation, 0.0, TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(0)));
                 AnimationSet.Add(reports, AnimationKind.Opacity, AnimationFactory.Create(AnimationType.DoubleAnimation, 0.0, TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(0)));
                 AnimationSet.Run();
 
             };
-            AnimationSet.Add(property_lbl, AnimationKind.TranslateY, AnimationFactory.Create(AnimationType.DoubleAnimation, 0.0, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(0)));
+            AnimationSet.Add(tiles_grid, AnimationKind.TranslateY, AnimationFactory.Create(AnimationType.DoubleAnimation, 0.0, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(0)));
             AnimationSet.Run();
             close_btn.IsEnabled = false;
+            reports.IsEnabled = false;
+            reports.Visibility = Visibility.Collapsed;
         }
 
         public class User
@@ -555,7 +606,61 @@ namespace Wpf_SysAdUI
             public string userName { get; set; }
             public string Event { get; set; }
         }
- 
 
+
+        private void lvUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //home_date_lbl.Content=;
+            //home_time_lbl.Content=;
+            //home_user_lbl.Content=;
+            //home_event_lbl.Content=;
+        }
+
+        private void AppUI_add_tile_Click(object sender, RoutedEventArgs e)
+        {
+            new Add_app().ShowDialog();
+            WrapPanel panel = (WrapPanel)FindName("App_stack");
+            WrapPanel panel2 = (WrapPanel)FindName("Stat_stack");
+            Grid grid = new Grid();
+            grid.Height = 140;
+            grid.Width = 140;
+            grid.Margin = new Thickness(5);
+            grid.Background = new SolidColorBrush(Colors.SkyBlue);
+
+            Grid grid2 = new Grid();
+            grid2.Height = 140;
+            grid2.Width = 140;
+            grid2.Margin = new Thickness(5);
+            grid2.Background = new SolidColorBrush(Colors.SkyBlue);
+            
+
+            TextBlock text = new TextBlock();
+            text.Margin = new Thickness(10);
+            grid.Children.Add(text);
+            panel.Children.Insert(0, grid);
+            panel2.Children.Insert(0, grid2);
+        }
+
+        private void AccExpander_CNA_pan_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            new ManageAccount().ShowDialog();
+        }
+
+        private void AccExpander_CP_pan_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            HomeUI_inner.Visibility = Visibility.Collapsed;
+            StatUI_inner.Visibility = Visibility.Collapsed;
+            RepUI_inner.Visibility = Visibility.Collapsed;
+            SchedUI_inner.Visibility = Visibility.Collapsed;
+            AppdUI_inner.Visibility = Visibility.Collapsed;
+            SetdUI_inner.Visibility = Visibility.Visible;
+            set_pan.Background = new SolidColorBrush(Color.FromRgb(46, 156, 218));
+            stat_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+            rep_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+            sched_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+            app_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+            home_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+            Expander.IsExpanded = false;
+        }
     }
 }
