@@ -63,6 +63,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Authentication.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -78,6 +82,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Authentication.xaml.cs">
+      <DependentUpon>Authentication.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClickEvent.cs" />
     <Compile Include="EventClass.cs" />
@@ -130,51 +137,58 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Icons\Electronic Icons White 64px %280%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %281%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2810%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %282%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %283%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %284%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %285%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %286%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %287%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %288%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %289%29.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Icons\Screenshot_12_ %281%29.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\TV%281%29.png" />
-    <Resource Include="Icons\Oven.png" />
-    <Resource Include="Icons\ElectricSomething%281%29.png" />
-    <Resource Include="Icons\Blender.png" />
-    <Resource Include="Icons\blower.png" />
-    <Resource Include="Icons\SewingMachine.png" />
-    <Resource Include="Icons\ElectricFan.png" />
-    <Resource Include="Icons\Aircon.png" />
-    <Resource Include="Icons\CPU.png" />
-    <Resource Include="Icons\Laptop.png" />
-    <Resource Include="Icons\ElectricSomething%282%29.png" />
-    <Resource Include="Icons\Speaker%281%29.png" />
-    <Resource Include="Icons\Plug_Charger.png" />
-    <Resource Include="Icons\Mixer.png" />
-    <Resource Include="Icons\Speaker%282%29.png" />
-    <Resource Include="Icons\Mixer%282%29.png" />
-    <Resource Include="Icons\DeskLamp.png" />
-    <Resource Include="Icons\LampShade.png" />
-    <Resource Include="Icons\ElectricSomething%283%29.png" />
-    <Resource Include="Icons\Iron.png" />
-    <Resource Include="Icons\Toaster.png" />
-    <Resource Include="Icons\TV%282%29.png" />
-    <Resource Include="Icons\TV%283%29.png" />
-    <Resource Include="Icons\TV%284%29.png" />
-    <Resource Include="Icons\TV%285%29.png" />
-    <Resource Include="Icons\TV%286%29.png" />
-    <Resource Include="Icons\TV%287%29.png" />
-    <Resource Include="Icons\Ref.png" />
-    <Resource Include="Icons\PC.png" />
-    <Resource Include="Icons\WashingMachine.png" />
-    <Resource Include="Icons\router.png" />
-    <Resource Include="Icons\Microwave.png" />
-    <Resource Include="Icons\exhaust.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Icons\capslock.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Icons\iconmonstr-user-6-icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Icons\bulb.png" />
+    <Resource Include="Icons\capslock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\Electronic Icons White 64px %2811%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2812%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2813%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2814%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2815%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2816%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2817%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2818%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2819%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2820%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2821%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2822%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2823%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2824%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2825%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2826%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2827%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2828%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2829%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2830%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2831%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2832%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2833%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2834%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2835%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2836%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2837%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2838%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2839%29.png" />
+    <Resource Include="Icons\Electronic Icons White 64px %2840%29.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

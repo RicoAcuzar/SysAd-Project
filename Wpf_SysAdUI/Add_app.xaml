@@ -2,7 +2,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:Custom="http://metro.mahapps.com/winfx/xaml/shared" x:Class="Wpf_SysAdUI.Add_app"
-        Title="Add_app" Height="300" Width="300">
+        Title="Add Appliance" ShowIconOnTitleBar="True" Icon="Icons/Screenshot_12_ (1).png"
+                      Height="403.093" Width="670.103" ResizeMode="NoResize" 
+                      WindowStartupLocation="CenterScreen" BorderBrush="SkyBlue">
     <Controls:MetroWindow.Resources>
         <Style x:Key="Shit" TargetType="{x:Type Button}">
             <Setter Property="Controls:ButtonHelper.CornerRadius" Value="3"/>
@@ -51,17 +53,180 @@
             </Setter>
         </Style>
     </Controls:MetroWindow.Resources>
-    <Grid>
-        <Button x:Name="create_btn" Content="Create" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" PreviewMouseDown="create_btn_PreviewMouseDown" PreviewMouseUp="create_btn_PreviewMouseUp" Style="{DynamicResource Shit}" Margin="107,220,104,23" >
+    <Grid Background="#FF6ABDDE">
+        <Label Content="Device Type:" Foreground="#FF3E3E7C" 
+               FontSize="16" Margin="39,25,527,317" />
+        <Label Content="Device Location:" Foreground="#FF3E3E7C" 
+               FontSize="16" Margin="12,57,527,287"/>
+        <Label Content="Electric Consumption:" Foreground="#FF3E3E7C" 
+               FontSize="16" Margin="10,88,490,253"/>
+        <Label Content="Select Icon:" Foreground="#FF3E3E7C" 
+               FontSize="16" Margin="12,120,372,217"/>
+        <Label Content="Preview:" Foreground="#FF3E3E7C" 
+        	FontSize="16" Margin="412,54,88,287"/>
+        <TextBox Controls:TextBoxHelper.Watermark="Device type"
+                 Controls:TextBoxHelper.ClearTextButton="True"
+            Name="devname_tb" Margin="137,30,292,318" TextChanged="devname_tb_TextChanged" />
+        <TextBox Controls:TextBoxHelper.Watermark="Device location"
+                 Controls:TextBoxHelper.ClearTextButton="True"
+            Name="devloc_tb" Margin="137,62,292,286" TextChanged="devloc_tb_TextChanged"  />
+        <TextBox Controls:TextBoxHelper.Watermark="Watts"
+                 Controls:TextBoxHelper.ClearTextButton="True"
+            Name="ec_tb" Margin="174,93,400,255" TextChanged="ec_tb_TextChanged"  />
+        <Grid Margin="0,149,292,37">
+            <ScrollViewer Margin="10" VerticalScrollBarVisibility="Auto">
+                <WrapPanel Background="#19000000" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <Grid  Name="light" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="TV" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic1}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="Speaker_1" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic2}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="Speaker_2" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic3}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="refr" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic4}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="WM" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic5}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="modem" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic6}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="something" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic7}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid  Name="Microwave" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic8}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="Exhaust" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic9}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="oven" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic10}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="something2" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic11}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="blender" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic12}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="blower" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic13}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="sewing" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic14}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="Efan" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic15}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="aircon" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic16}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="cpu" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic17}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="laptop" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic18}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="telephone" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic19}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="phones" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic20}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="cam" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic22}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="mixer" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic23}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="stove" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic24}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="something3" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic25}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="Ebeater" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic26}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="desklamp" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic27}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="lampshade" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic28}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="something4" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic29}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="iron" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic30}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="toaster" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic31}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="TV2" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic32}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="TVHD" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic33}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="TV3" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic34}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="TV6" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic35}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="TV7" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic36}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="TV8" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic37}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="TV9" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic38}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="TV10" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic39}" Height="50" Width="50"/>
+                    </Grid>
+                    <Grid Name="comp" Background="#00FFFFFF" Height="53" Width="53">
+                        <Image Source="{StaticResource pic40}" Height="50" Width="50"/>
+                    </Grid>
+                </WrapPanel>
+            </ScrollViewer>
+        </Grid>
+        <Grid Margin="412,88,20,70" Background="SkyBlue">
+            <Grid Name="prev" Height="140" Width="140" Margin="46,38,46,38" Background="#FFA4A4CF">
+                <Image Name="logo" Margin="10,10,13,81" />
+                <TextBlock Name="dev_name_prev"  Margin="7,64,13,47" 
+                       Foreground="White" FontSize="15" 
+                       TextAlignment="Center"
+                       TextWrapping="WrapWithOverflow" />
+                <TextBlock Name="dev_loc_prev" Foreground="White" 
+                       TextAlignment="Center" Margin="10,87,10,33" 
+                       FontSize="11"/>
+                <TextBlock Name="consump_prev" Foreground="White" 
+                       TextAlignment="Center" Margin="10,101,10,22"
+                       FontSize="11"/>
+            </Grid>
+        </Grid>
+        <Button x:Name="create_btn" Content="Create" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" PreviewMouseDown="create_btn_PreviewMouseDown" PreviewMouseUp="create_btn_PreviewMouseUp" Style="{DynamicResource Shit}" Margin="377,329,158,19">
             <Button.Effect>
-                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
+                <DropShadowEffect Color="Black" Direction="320" 
+                                  ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
             </Button.Effect>
         </Button>
-        <Button x:Name="cancel_btn" Content="Cancel" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" PreviewMouseDown="cancel_btn_PreviewMouseDown" PreviewMouseUp="cancel_btn_PreviewMouseUp" Style="{DynamicResource Shit}" Margin="201,220,10,23" >
+        <Button x:Name="cancel_btn" Content="Cancel" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" PreviewMouseDown="cancel_btn_PreviewMouseDown" PreviewMouseUp="cancel_btn_PreviewMouseUp" Style="{DynamicResource Shit}" Margin="520,329,15,19" >
             <Button.Effect>
-                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
+                <DropShadowEffect Color="Black" Direction="320" 
+                                  ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
             </Button.Effect>
         </Button>
+
 
     </Grid>
 </Controls:MetroWindow>

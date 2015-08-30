@@ -70,6 +70,10 @@ namespace Wpf_SysAdUI
         private void edit_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(edit_btn, 0.0, TimeSpan.FromMilliseconds(0));
+            time_off_tb.IsEnabled = true;
+            time_on_tb.IsEnabled = true;
+            device_tb.IsEnabled = true;
+            desc_tb.IsEnabled = true;
         }
 
         private void edit_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
@@ -89,7 +93,11 @@ namespace Wpf_SysAdUI
 
         private void list_sched_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //something here
+            Sched sched = (Sched)list_sched.SelectedItem;
+            time_on_tb.Text = sched.Time1String;
+            time_off_tb.Text = sched.Time2String;
+            desc_tb.Text = sched.Description;
+            device_tb.Text = sched.Device;
         }
     }
 }

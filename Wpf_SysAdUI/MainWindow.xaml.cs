@@ -32,7 +32,6 @@ namespace Wpf_SysAdUI
             items.Add(new User() { Date = new DateTime(2015, 8, 30), Time = new DateTime(1, 1, 1, 11, 50, 00), userName = "aaaaaaaadsadsaddsdssadsadsa", Event = "aaaaaaadsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             lvUsers.ItemsSource = items;
             reports.ItemsSource = items;
-
             
         }
 
@@ -70,7 +69,9 @@ namespace Wpf_SysAdUI
             AnimationSet.Add(LogIn, AnimationKind.TranslateX, AnimationFactory.Create(AnimationType.DoubleAnimation, 970.0, TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(0)));
             AnimationSet.Run();
             Account_name.Text = User_tb_login.Text;
-            Account_name.Visibility = Visibility.Visible; 
+            Account_name.Visibility = Visibility.Visible;
+            set_userN_tb.Text = User_tb_login.Text;
+            set_pass_tb.Text = pass_login.Password.ToString();
             Animation.DropShadowOpacity(signin_btn, 0.4, TimeSpan.FromSeconds(0));
         }
 
@@ -351,18 +352,23 @@ namespace Wpf_SysAdUI
 
         private void set_pan_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            HomeUI_inner.Visibility = Visibility.Collapsed;
-            StatUI_inner.Visibility = Visibility.Collapsed;
-            RepUI_inner.Visibility = Visibility.Collapsed;
-            SchedUI_inner.Visibility = Visibility.Collapsed;
-            AppdUI_inner.Visibility = Visibility.Collapsed;
-            SetdUI_inner.Visibility = Visibility.Visible;
-            set_pan.Background = new SolidColorBrush(Color.FromRgb(46, 156, 218));
-            stat_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
-            rep_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
-            sched_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
-            app_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
-            home_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+            if (SetdUI_inner.Visibility != Visibility.Visible)
+            {
+                new Authentication().ShowDialog();
+            }
+                HomeUI_inner.Visibility = Visibility.Collapsed;
+                StatUI_inner.Visibility = Visibility.Collapsed;
+                RepUI_inner.Visibility = Visibility.Collapsed;
+                SchedUI_inner.Visibility = Visibility.Collapsed;
+                AppdUI_inner.Visibility = Visibility.Collapsed;
+                SetdUI_inner.Visibility = Visibility.Visible;
+                set_pan.Background = new SolidColorBrush(Color.FromRgb(46, 156, 218));
+                stat_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                rep_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                sched_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                app_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                home_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+            
         }
 
         private void viewSched_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -391,46 +397,80 @@ namespace Wpf_SysAdUI
 
         private void viewSched_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
+
             Animation.DropShadowOpacity(viewSched_btn, 0.5, TimeSpan.FromSeconds(0));
-            ManageSched m = new ManageSched();
-            m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.ToString();
-            m.create_btn.Visibility = Visibility.Collapsed;
-            m.delete_btn.Visibility = Visibility.Collapsed;
-            m.edit_btn.Visibility = Visibility.Collapsed;
-            m.save_btn.Visibility = Visibility.Collapsed;
-            m.ShowDialog();
+            if (SchedUI_Calendar.SelectedDate == null)
+            {
+                MessageBox.Show("Please select a date.", "No Date Selected", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                ManageSched m = new ManageSched();
+                m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.Value.ToLongDateString();
+                m.create_btn.Visibility = Visibility.Collapsed;
+                m.delete_btn.Visibility = Visibility.Collapsed;
+                m.edit_btn.Visibility = Visibility.Collapsed;
+                m.save_btn.Visibility = Visibility.Collapsed;
+                m.ShowDialog();
+            }
         }
 
         private void createSched_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(createSched_btn, 0.5, TimeSpan.FromSeconds(0));
-            ManageSched m= new ManageSched();
-            m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.ToString();
-            m.delete_btn.Visibility = Visibility.Collapsed;
-            m.edit_btn.Visibility = Visibility.Collapsed;
-            m.save_btn.Visibility = Visibility.Collapsed;
-            m.ShowDialog();
+            if (SchedUI_Calendar.SelectedDate == null)
+            {
+                MessageBox.Show("Please select a date.", "No Date Selected", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                ManageSched m = new ManageSched();
+                m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.Value.ToLongDateString();
+                m.list_sched.IsEnabled = false;
+                m.time_off_tb.IsEnabled = true;
+                m.time_on_tb.IsEnabled = true;
+                m.device_tb.IsEnabled = true;
+                m.desc_tb.IsEnabled = true;
+                m.delete_btn.Visibility = Visibility.Collapsed;
+                m.edit_btn.Visibility = Visibility.Collapsed;
+                m.save_btn.Visibility = Visibility.Collapsed;
+                m.ShowDialog();
+            }
         }
 
         private void editSched_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(editSched_btn, 0.5, TimeSpan.FromSeconds(0));
-            ManageSched m = new ManageSched();
-            m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.ToString();
-            m.delete_btn.Visibility = Visibility.Collapsed;
-            m.create_btn.Visibility = Visibility.Collapsed;
-            m.ShowDialog();
+            if (SchedUI_Calendar.SelectedDate == null)
+            {
+                MessageBox.Show("Please select a date.", "No Date Selected", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                ManageSched m = new ManageSched();
+                m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.Value.ToLongDateString();
+                m.delete_btn.Visibility = Visibility.Collapsed;
+                m.create_btn.Visibility = Visibility.Collapsed;
+                m.ShowDialog();
+            }
         }
 
         private void delSched_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(delSched_btn, 0.5, TimeSpan.FromSeconds(0));
-            ManageSched m = new ManageSched();
-            m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.ToString();
-            m.create_btn.Visibility = Visibility.Collapsed;
-            m.edit_btn.Visibility = Visibility.Collapsed;
-            m.save_btn.Visibility = Visibility.Collapsed;
-            m.ShowDialog();
+            if (SchedUI_Calendar.SelectedDate == null)
+            {
+                MessageBox.Show("Please select a date.", "No Date Selected", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                ManageSched m = new ManageSched();
+                m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.Value.ToLongDateString();
+                m.create_btn.Visibility = Visibility.Collapsed;
+                m.edit_btn.Visibility = Visibility.Collapsed;
+                m.save_btn.Visibility = Visibility.Collapsed;
+                m.ShowDialog();
+            }
         }
 
         private void RepUI_D_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -619,35 +659,21 @@ namespace Wpf_SysAdUI
         private void AppUI_add_tile_Click(object sender, RoutedEventArgs e)
         {
             new Add_app().ShowDialog();
-            WrapPanel panel = (WrapPanel)FindName("App_stack");
-            WrapPanel panel2 = (WrapPanel)FindName("Stat_stack");
-            Grid grid = new Grid();
-            grid.Height = 140;
-            grid.Width = 140;
-            grid.Margin = new Thickness(5);
-            grid.Background = new SolidColorBrush(Colors.SkyBlue);
-
-            Grid grid2 = new Grid();
-            grid2.Height = 140;
-            grid2.Width = 140;
-            grid2.Margin = new Thickness(5);
-            grid2.Background = new SolidColorBrush(Colors.SkyBlue);
-            
-
-            TextBlock text = new TextBlock();
-            text.Margin = new Thickness(10);
-            grid.Children.Add(text);
-            panel.Children.Insert(0, grid);
-            panel2.Children.Insert(0, grid2);
+           
         }
 
         private void AccExpander_CNA_pan_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            Expander.IsExpanded = false;
             new ManageAccount().ShowDialog();
         }
 
         private void AccExpander_CP_pan_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (SetdUI_inner.Visibility != Visibility.Visible)
+            {
+                new Authentication().ShowDialog();
+            }
             HomeUI_inner.Visibility = Visibility.Collapsed;
             StatUI_inner.Visibility = Visibility.Collapsed;
             RepUI_inner.Visibility = Visibility.Collapsed;
@@ -662,5 +688,51 @@ namespace Wpf_SysAdUI
             home_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
             Expander.IsExpanded = false;
         }
+
+        private void set_pass_tb_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (set_pass_tb.Text != pass_login.Password.ToString())
+                save_btn.IsEnabled = true;
+            else
+                save_btn.IsEnabled = false;
+        }
+
+        private void set_userN_tb_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (set_userN_tb.Text != User_tb_login.Text)
+                save_btn.IsEnabled = true;
+            else
+                save_btn.IsEnabled = false;
+        }
+
+        private void set_kwh_tb_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            save_btn.IsEnabled = true;
+        }
+
+        private void save_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Animation.DropShadowOpacity(save_btn, 0.0, TimeSpan.FromSeconds(0));
+        }
+
+        private void cancel_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Animation.DropShadowOpacity(cancel_btn, 0.0, TimeSpan.FromSeconds(0));
+        }
+
+        private void save_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Animation.DropShadowOpacity(save_btn, 0.5, TimeSpan.FromSeconds(0));
+        }
+
+        private void cancel_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        {
+            Animation.DropShadowOpacity(cancel_btn, 0.5, TimeSpan.FromSeconds(0));
+            set_userN_tb.Text = User_tb_login.Text;
+            set_pass_tb.Text = pass_login.Password.ToString();
+            save_btn.IsEnabled = false;
+        }
+
+        
     }
 }
