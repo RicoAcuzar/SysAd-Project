@@ -13,7 +13,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            <BitmapImage x:Key="pic" UriSource="Icons/Electronic Icons White 64px (0).png"/>
+            <BitmapImage x:Key="pic0" UriSource="Icons/Electronic Icons White 64px (0).png"/>
             <BitmapImage x:Key="pic1" UriSource="Icons/Electronic Icons White 64px (1).png"/>
             <BitmapImage x:Key="pic2" UriSource="Icons/Electronic Icons White 64px (2).png"/>
             <BitmapImage x:Key="pic3" UriSource="Icons/Electronic Icons White 64px (3).png"/>
@@ -54,9 +54,11 @@
             <BitmapImage x:Key="pic38" UriSource="Icons/Electronic Icons White 64px (38).png"/>
             <BitmapImage x:Key="pic39" UriSource="Icons/Electronic Icons White 64px (39).png"/>
             <BitmapImage x:Key="pic40" UriSource="Icons/Electronic Icons White 64px (40).png"/>
+            <BitmapImage x:Key="error" UriSource="Icons/iconmonstr-warning-4-icon-256.png"/>
             <Image x:Key="caps_icon" Source="Icons/capslock.png"/>
             <Image x:Key="user" Source="Icons/iconmonstr-user-6-icon.png"/>
-            <BitmapImage x:Key="Logo" UriSource="pack://application:,,,/Icons/Screenshot_12_ (1).png"/>
+            <BitmapImage x:Key="Logo" UriSource="Icons/Screenshot_12_ (1).png"/>
+            <BitmapImage x:Key="info" UriSource="Icons/iconmonstr-info-3-icon-256.png"/>
             <Path x:Key="vStats"
               Data="M148.527,360.5H81.334v-139h67.193V360.5z M242.527,360.5h-67.193V79.167h67.193V360.5z M336.527,360.5h-67.193V164.667h67.193V360.5z M430.527,360.5h-67.193v-70.578h67.193V360.5z M462,387.834H50v45h412V387.834z" />
             <Style x:Key="StatsIcon"

@@ -47,6 +47,18 @@ namespace Wpf_SysAdUI
             Animation.DropShadowOpacity(cancel_btn, 0.5, TimeSpan.FromMilliseconds(0));
             this.Close();
         }
+
+        private void retype_password_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if(create_password.Password==retype_password.Password||retype_password.Password=="")
+            {
+                error.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                error.Visibility = Visibility.Visible;
+            }
+        }
         
     }
 }

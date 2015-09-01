@@ -52,15 +52,17 @@
         </Style>
     </Controls:MetroWindow.Resources>
     <Grid Background="#FF6ABDDE">
+        <Image Name="error" Source="{StaticResource error}" Height="25" Width="25" 
+               Margin="399,127,12,118" Visibility="Collapsed" ToolTip="Password did not matched!"/>
         <TextBox Controls:TextBoxHelper.Watermark="Username"
                  Controls:TextBoxHelper.ClearTextButton="True"
                  Margin="162,54,46,190"/>
-        <PasswordBox Controls:TextBoxHelper.Watermark="Password"
+        <PasswordBox Name="create_password" Controls:TextBoxHelper.Watermark="Password"
                      Controls:PasswordBoxHelper.CapsLockIcon="{StaticResource caps_icon}"
             Margin="162,90,46,154"/>
-        <PasswordBox Controls:TextBoxHelper.Watermark="Re-type Password"
+        <PasswordBox Name="retype_password" Controls:TextBoxHelper.Watermark="Re-type Password"
                      Controls:PasswordBoxHelper.CapsLockIcon="{StaticResource caps_icon}"
-            Margin="162,126,46,118" />
+            Margin="162,126,46,118" PasswordChanged="retype_password_PasswordChanged" />
         <Controls:SplitButton Name="acc_type" 
                               
                                Margin="160,162,46,87" />

@@ -304,6 +304,7 @@ namespace Wpf_SysAdUI
 
         private void rep_pan_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            MessageBox.Show("Please Fix Functionalities esp. Sorting by weekly.Thank you!", "WAIT", MessageBoxButton.OK, MessageBoxImage.Information);
             HomeUI_inner.Visibility = Visibility.Collapsed;
             StatUI_inner.Visibility = Visibility.Collapsed;
             RepUI_inner.Visibility = Visibility.Visible;
@@ -352,10 +353,15 @@ namespace Wpf_SysAdUI
 
         private void set_pan_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            string check="NO";
             if (SetdUI_inner.Visibility != Visibility.Visible)
             {
-                new Authentication().ShowDialog();
+                Authentication a = new Authentication(this);
+                a.ShowDialog();
+                check=a.check;
             }
+            if (check == "GO")
+            {
                 HomeUI_inner.Visibility = Visibility.Collapsed;
                 StatUI_inner.Visibility = Visibility.Collapsed;
                 RepUI_inner.Visibility = Visibility.Collapsed;
@@ -368,8 +374,10 @@ namespace Wpf_SysAdUI
                 sched_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
                 app_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
                 home_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
-            
+            }
+
         }
+        
 
         private void viewSched_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -478,6 +486,7 @@ namespace Wpf_SysAdUI
             
             reports.IsEnabled = true;
             reports.Visibility = Visibility.Visible;
+            //sample adding data on tables
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
@@ -508,6 +517,7 @@ namespace Wpf_SysAdUI
         {
             reports.IsEnabled = true;
             reports.Visibility = Visibility.Visible;
+            //sample adding data on tables
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
@@ -537,6 +547,7 @@ namespace Wpf_SysAdUI
         {
             reports.IsEnabled = true;
             reports.Visibility = Visibility.Visible;
+            //sample adding data on tables
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
@@ -566,6 +577,7 @@ namespace Wpf_SysAdUI
         {
             reports.IsEnabled = true;
             reports.Visibility = Visibility.Visible;
+            //sample adding data on tables
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
@@ -595,6 +607,7 @@ namespace Wpf_SysAdUI
         {
             reports.IsEnabled = true;
             reports.Visibility = Visibility.Visible;
+            //sample adding data on tables
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
@@ -618,6 +631,7 @@ namespace Wpf_SysAdUI
             RepUI_Y_tile.Background = new SolidColorBrush(Color.FromArgb(80, 67, 178, 226));
             RepUI_D_tile.Background = new SolidColorBrush(Color.FromArgb(80, 67, 178, 226));
             close_btn.IsEnabled = true;
+            MessageBox.Show("I dont know what to put here.", "No Idea", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void close_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -637,6 +651,7 @@ namespace Wpf_SysAdUI
             reports.Visibility = Visibility.Collapsed;
         }
 
+        //sample adding data on tables
         public class User
         {
             public DateTime Date { get; set; }
@@ -648,17 +663,10 @@ namespace Wpf_SysAdUI
         }
 
 
-        private void lvUsers_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            //home_date_lbl.Content=;
-            //home_time_lbl.Content=;
-            //home_user_lbl.Content=;
-            //home_event_lbl.Content=;
-        }
-
         private void AppUI_add_tile_Click(object sender, RoutedEventArgs e)
         {
-            new Add_app().ShowDialog();
+            Add_app add = new Add_app(this);
+            add.ShowDialog();
            
         }
 
@@ -670,23 +678,29 @@ namespace Wpf_SysAdUI
 
         private void AccExpander_CP_pan_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            string check="NO";
             if (SetdUI_inner.Visibility != Visibility.Visible)
             {
-                new Authentication().ShowDialog();
+                Authentication a = new Authentication(this);
+                a.ShowDialog();
+                check=a.check;
             }
-            HomeUI_inner.Visibility = Visibility.Collapsed;
-            StatUI_inner.Visibility = Visibility.Collapsed;
-            RepUI_inner.Visibility = Visibility.Collapsed;
-            SchedUI_inner.Visibility = Visibility.Collapsed;
-            AppdUI_inner.Visibility = Visibility.Collapsed;
-            SetdUI_inner.Visibility = Visibility.Visible;
-            set_pan.Background = new SolidColorBrush(Color.FromRgb(46, 156, 218));
-            stat_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
-            rep_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
-            sched_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
-            app_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
-            home_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
-            Expander.IsExpanded = false;
+            if (check == "GO")
+            {
+                HomeUI_inner.Visibility = Visibility.Collapsed;
+                StatUI_inner.Visibility = Visibility.Collapsed;
+                RepUI_inner.Visibility = Visibility.Collapsed;
+                SchedUI_inner.Visibility = Visibility.Collapsed;
+                AppdUI_inner.Visibility = Visibility.Collapsed;
+                SetdUI_inner.Visibility = Visibility.Visible;
+                set_pan.Background = new SolidColorBrush(Color.FromRgb(46, 156, 218));
+                stat_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                rep_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                sched_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                app_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                home_pan.Background = new SolidColorBrush(Color.FromArgb(0, 255, 255, 255));
+                Expander.IsExpanded = false;
+            }
         }
 
         private void set_pass_tb_TextChanged(object sender, TextChangedEventArgs e)
@@ -733,6 +747,117 @@ namespace Wpf_SysAdUI
             save_btn.IsEnabled = false;
         }
 
-        
+        public void Add_Appliances(string devName, string devLoc, string watts, Image sa)
+        {
+            WrapPanel panel = (WrapPanel)FindName("App_stack");
+            WrapPanel panel2 = (WrapPanel)FindName("Stat_stack");
+            Image i = new Image();
+            i.Margin = new Thickness(10, 10, 10, 81);
+            i.Source = sa.Source;
+
+            Image i2 = new Image();
+            i2.Margin = new Thickness(10, 10, 10, 81);
+            i2.Source = sa.Source;
+
+            Path info = new Path();
+            info.Margin = new Thickness(115, 5, 5, 115);
+            info.Style = FindResource("InfoIcon") as Style;
+            info.Fill = new SolidColorBrush(Colors.White);
+            info.ToolTip = "Turns your appliances On or Off.";
+
+            Grid grid = new Grid();
+            grid.Height = 140;
+            grid.Width = 140;
+            grid.Margin = new Thickness(5);
+            grid.Background = new SolidColorBrush(Colors.SkyBlue);
+
+            Grid grid2 = new Grid();
+            grid2.Height = 140;
+            grid2.Width = 140;
+            grid2.Margin = new Thickness(5);
+            grid2.Background = new SolidColorBrush(Colors.SkyBlue);
+
+            TextBlock name = new TextBlock();
+            name.Text = devName;
+            name.FontSize = 16;
+            name.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            name.TextAlignment = TextAlignment.Center;
+            name.Margin = new Thickness(5, 64, 5, 47);
+            
+            TextBlock name2 = new TextBlock();
+            name2.Text = devName;
+            name2.FontSize = 16;
+            name2.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            name2.TextAlignment = TextAlignment.Center;
+            name2.Margin = new Thickness(5, 64, 5, 47);
+
+            TextBlock loc = new TextBlock();
+            loc.Text = devLoc;
+            loc.FontSize = 11;
+            loc.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            loc.TextAlignment = TextAlignment.Center;
+            loc.Margin = new Thickness(10, 87, 10, 33);
+            
+            TextBlock loc2 = new TextBlock();
+            loc2.Text = devLoc;
+            loc2.FontSize = 11;
+            loc2.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            loc2.TextAlignment = TextAlignment.Center;
+            loc2.Margin = new Thickness(10, 87, 10, 33);
+            
+            TextBlock w = new TextBlock();
+            w.Text = watts + " Watts";
+            w.FontSize = 11;
+            w.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            w.TextAlignment = TextAlignment.Center;
+            w.Margin = new Thickness(10, 101, 10, 22);
+
+            ToggleSwitch toggle = new ToggleSwitch();
+            toggle.Margin = new Thickness(0, 110, 25, 0);
+            toggle.OffSwitchBrush = new SolidColorBrush(Color.FromRgb(17, 158, 218));
+            toggle.OnSwitchBrush = new SolidColorBrush(Color.FromRgb(160, 222, 72));
+            toggle.Foreground = new SolidColorBrush(Colors.Transparent);
+            toggle.HorizontalAlignment = HorizontalAlignment.Center;
+            ScaleTransform size = new ScaleTransform(1, 0.5);
+            toggle.RenderTransform = size;
+
+            grid.Children.Add(name);
+            grid.Children.Add(loc);
+            grid.Children.Add(w);
+            grid.Children.Add(i);
+            
+            grid2.Children.Add(name2);
+            grid2.Children.Add(loc2);
+            grid2.Children.Add(i2);
+            grid2.Children.Add(toggle);
+            grid2.Children.Add(info);
+
+            grid.MouseEnter += grid_MouseEnter;
+            grid.MouseLeave += grid_MouseLeave;
+            grid.MouseDown += grid_MouseDown;
+            panel.Children.Insert(0, grid);
+            panel2.Children.Insert(0, grid2);
+        }
+
+
+        void grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            //Add_app add = new Add_app(this);
+            //add.ShowDialog();
+            //data from selected device will go to textboxes in Add_app form 
+            //to edit and delete
+            //paki lagyan nalang ng delete button sa Add_app form
+            MessageBox.Show("Please read the comments in the code. Thanks.", "No function yet", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        void grid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            ((Grid)sender).Background = new SolidColorBrush(Colors.SkyBlue);
+        }
+
+        void grid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ((Grid)sender).Background = new SolidColorBrush(Color.FromRgb(147,147,255));
+        }
     }
 }

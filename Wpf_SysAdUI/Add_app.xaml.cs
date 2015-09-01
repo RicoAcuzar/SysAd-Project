@@ -20,61 +20,117 @@ namespace Wpf_SysAdUI
     /// </summary>
     public partial class Add_app : MetroWindow
     {
-        public Add_app()
+        int selectedIndex;
+        MainWindow main = null;
+
+        public Add_app( MainWindow m)
         {
             InitializeComponent();
+            InitializeStackWrapPanel();
+            main = m;
         }
+
+        public void InitializeStackWrapPanel()
+        {
+            selectedIndex = -1;
+
+            List<Element> elementList = new List<Element>();
+            for (int i = 0; i <= 40; i++)
+                elementList.Add(new Element("pic" + i.ToString()));
+
+            int index = 0;
+            WrapPanel stack = (WrapPanel)FindName("stack");
+
+            foreach (Element element in elementList)
+            {
+                Image image = new Image()
+                {
+                    Source = (BitmapImage)FindResource(element.ImageSourceString),
+                    Height = 50,
+                    Width = 50,
+                    Margin = new Thickness(5)
+                };
+
+                Grid grid = new Grid();
+                grid.Background = new SolidColorBrush(Colors.Transparent);
+
+                element.Index = index++;
+                grid.Tag = element;
+                grid.Children.Add(image);
+
+                grid.MouseDown += grid_MouseDown;
+                grid.MouseEnter += grid_MouseEnter;
+                grid.MouseLeave += grid_MouseLeave;
+
+                stack.Children.Add(grid);
+            }
+        }
+
+        void grid_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (selectedIndex != ((Element)((Grid)sender).Tag).Index)
+            {
+                ((Grid)sender).Background = new SolidColorBrush(Colors.Transparent);
+            }
+        }
+
+        void grid_MouseEnter(object sender, MouseEventArgs e)
+        {
+            ((Grid)sender).Background = new SolidColorBrush(Color.FromArgb(40, 0, 0, 0));
+        }
+
+        void grid_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            WrapPanel wrapPanel = ((WrapPanel)FindName("stack"));
+            Element element = (Element)((Grid)sender).Tag;
+
+            if (selectedIndex != element.Index)
+            {
+                selectedIndex = element.Index;
+
+                foreach (Grid grid in wrapPanel.Children.OfType<Grid>().ToList().Where(g => ((Element)g.Tag).Index != selectedIndex))
+                    grid.Background = new SolidColorBrush(Colors.Transparent);
+
+                ((Grid)sender).Background = new SolidColorBrush(Color.FromArgb(40, 0, 0, 0));
+            }
+
+            OnSelectionChanged(element);
+        }
+
+        private void OnSelectionChanged(Element element)
+        {
+            // DO YOUR THING HERE
+            logo.Source = (BitmapImage)FindResource(element.ImageSourceString);
+        }
+
+        class Element
+        {
+            public Element(string imagesource)
+            {
+                Index = 0;
+                ImageSourceString = imagesource;
+            }
+
+            public Element(int index, string imagesource)
+            {
+                Index = index;
+                ImageSourceString = imagesource;
+            }
+
+            public int Index { get; set; }
+            public string ImageSourceString { get; set; }
+        }
+
         private void create_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(create_btn, 0.0, TimeSpan.FromMilliseconds(0));
-            //WrapPanel panel = (WrapPanel)FindName("App_stack");
-            //WrapPanel panel2 = (WrapPanel)FindName("Stat_stack");
-            Grid grid = new Grid();
-            grid.Height = 140;
-            grid.Width = 140;
-            grid.Margin = new Thickness(5);
-            grid.Background = new SolidColorBrush(Colors.SkyBlue);
-
-
-            Grid grid2 = new Grid();
-            grid2.Height = 140;
-            grid2.Width = 140;
-            grid2.Margin = new Thickness(5);
-            grid2.Background = new SolidColorBrush(Colors.SkyBlue);
-
-
-            TextBlock text = new TextBlock();
-            text.Text = devname_tb.Text;
-            text.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            text.FontSize = 15;
-            text.TextAlignment = TextAlignment.Center;
-            text.Margin = new Thickness(7, 64, 13, 47);
-            
-            TextBlock text2 = new TextBlock();
-            text2.Text = devloc_tb.Text;
-            text2.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            text2.FontSize = 11;
-            text2.TextAlignment = TextAlignment.Center;
-            text2.Margin = new Thickness(10, 87, 10, 33);
-
-            TextBlock text3= new TextBlock();
-            text3.Text = ec_tb.Text;
-            text3.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
-            text3.FontSize = 11;
-            text3.TextAlignment = TextAlignment.Center;
-            text3.Margin = new Thickness(10, 101, 10, 22);
-            
-            grid.Children.Add(text);
-            grid.Children.Add(text2);
-            grid.Children.Add(text3);
-            //panel.Children.Insert(0, grid);
-            //panel2.Children.Insert(0, grid2);
-            this.Close();
         }
 
         private void create_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(create_btn, 0.5, TimeSpan.FromMilliseconds(0));
+            main.Add_Appliances(devname_tb.Text, devloc_tb.Text, ec_tb.Text, logo);
+            this.Close();
         }
 
         private void cancel_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -105,5 +161,6 @@ namespace Wpf_SysAdUI
             else
                 consump_prev.Text = ec_tb.Text + " Watts";
         }
+
     }
 }

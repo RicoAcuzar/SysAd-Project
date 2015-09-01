@@ -5,7 +5,7 @@
         xmlns:Custom="http://metro.mahapps.com/winfx/xaml/shared" x:Class="Wpf_SysAdUI.MainWindow"
         ShowIconOnTitleBar="True" Title="CASA" Height="700" Width="970" Icon="Icons/Screenshot_12_ (1).png" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded">
     <Controls:MetroWindow.Resources>
-        
+
         <Style x:Key="Shit" TargetType="{x:Type Button}">
             <Setter Property="Controls:ButtonHelper.CornerRadius" Value="3"/>
             <Setter Property="MinHeight" Value="25"/>
@@ -130,14 +130,14 @@
             <Grid Name="Inner_UIMain" Opacity="0" Visibility="Collapsed">
                 <Rectangle Margin="110,150,20,20" Stroke="#FF1D97FD"/>
                 <Controls:ToggleSwitch Margin="694,99,179,526" ThumbIndicatorBrush="#FF383A3C" OffSwitchBrush="#CC119EDA" OnSwitchBrush="#CC21F075" Foreground="#FFCB6F5B"/>
-                <Label FontSize="15.8" Foreground="#FFCB6F5B" Content="Edit Mode:" Margin="608,101,232,536" FontWeight="SemiBold"/>
-
+                <Label FontSize="15.8" Foreground="#FFCB6F5B" Content="Edit Mode:" Margin="609,102,263,536" FontWeight="SemiBold"/>
+                <Path Style="{StaticResource InfoIcon}" Fill="#FF7263D3" Margin="770,82.5,179,573.5" Stretch="Fill" Height="15" Width="15" ToolTip="What is this for?"/>
                 <Grid Name="HomeUI_inner" Margin="110,150,20,20" Opacity="100" Visibility="Collapsed">
                     <StackPanel Margin="10,10,10,381" Height="110" Background="#FFD0E0F7" Orientation="Horizontal">
                         <Path Style="{StaticResource InfoIcon}" Fill="#FF9696F9" Margin="99.167,16.416,0,16.416" Stretch="Fill" Height="77.168" Width="79.833"/>
                         <Label FontSize="30" Content="Your current power usage is HIGH" Foreground="#FFBB6767" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40,0,0,0"/>
                     </StackPanel>
-                    <ListView Margin="10,138,10,120" Name="lvUsers" SelectionChanged="lvUsers_SelectionChanged">
+                    <ListView Margin="10,138,10,120" Name="lvUsers" >
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Date" Width="120" DisplayMemberBinding="{Binding DateString}" />
@@ -174,7 +174,7 @@
                     </Label>
                     <Grid Name="tiles_grid" Margin="0,212,0,116">
                         <Grid.RenderTransform>
-                                <TranslateTransform />
+                            <TranslateTransform />
                         </Grid.RenderTransform>
                         <Controls:Tile Name="RepUI_D_tile" FontSize="30" Content="Daily" Background="#CC43B2E2"  MouseEnter="RepUI_D_tile_MouseEnter" MouseLeave="RepUI_D_tile_MouseLeave" VerticalAlignment="Top" Margin="24,17,670,0" PreviewMouseDown="RepUI_D_tile_PreviewMouseDown"/>
                         <Controls:Tile Name="RepUI_W_tile" FontSize="30" Content="Weekly" Background="#CC43B2E2"   MouseEnter="RepUI_W_tile_MouseEnter" MouseLeave="RepUI_W_tile_MouseLeave" Margin="184,17,510,16" PreviewMouseDown="RepUI_W_tile_PreviewMouseDown" />

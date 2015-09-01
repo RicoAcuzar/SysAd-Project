@@ -190,6 +190,12 @@
     <Resource Include="Icons\Electronic Icons White 64px %2839%29.png" />
     <Resource Include="Icons\Electronic Icons White 64px %2840%29.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\iconmonstr-warning-4-icon-256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icons\iconmonstr-info-3-icon-256.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

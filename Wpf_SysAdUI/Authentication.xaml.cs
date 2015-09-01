@@ -18,11 +18,15 @@ namespace Wpf_SysAdUI
     /// <summary>
     /// Interaction logic for Authentication.xaml
     /// </summary>
+    
     public partial class Authentication : MetroWindow
     {
-        public Authentication()
+        string checker;    
+        MainWindow Main = null;
+        public Authentication(MainWindow m)
         {
             InitializeComponent();
+            Main = m;
         }
 
         
@@ -46,9 +50,20 @@ namespace Wpf_SysAdUI
         private void Ok_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(Ok_btn, 0.5, TimeSpan.FromMilliseconds(0));
-
+            if (pass.Password == Main.pass_login.Password)
+            {
+                checker = "GO";
+                this.Close();
+            }
+            else
+            {
+                checker = "NO";
+                MessageBox.Show("Incorrect Password!", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                this.Close();
+            }
         }
-
+        public string check
+        { get { return checker; } }
      
     }
 }
