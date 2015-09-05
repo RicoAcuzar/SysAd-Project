@@ -15,6 +15,8 @@ using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using System.Windows.Threading;
 
+using BusinessLogic;
+
 namespace Wpf_SysAdUI
 {
     /// <summary>
@@ -22,6 +24,10 @@ namespace Wpf_SysAdUI
     /// </summary>
     public partial class MainWindow 
     {
+        //
+        // Animation Codes
+        //
+        #region Animation Codes
         public MainWindow()
         {
             InitializeComponent();
@@ -859,5 +865,19 @@ namespace Wpf_SysAdUI
         {
             ((Grid)sender).Background = new SolidColorBrush(Color.FromRgb(147,147,255));
         }
+        #endregion
+
+
+        //
+        // Functionality Codes
+        //
+        #region Functionality Codes
+
+        //Sign in button
+        private void signin_btn_Click(object sender, RoutedEventArgs e)
+        {
+            Globals.Login("", "");
+        }
+        #endregion
     }
 }

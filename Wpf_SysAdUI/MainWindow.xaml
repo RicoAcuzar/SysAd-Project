@@ -91,7 +91,7 @@
                          Height="20" Margin="334,507,346,138" />
             <Image Source="{StaticResource Logo}" Margin="334,82,346,227" VerticalAlignment="Center" HorizontalAlignment="Center" Height="362" Width="284"/>
 
-            <Button Name="signin_btn" Content="Sign in" Margin="419,552,434,91" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE" Height="27"  VerticalContentAlignment="Stretch" BorderThickness="0" PreviewMouseDown="signin_btn_PreviewMouseDown" PreviewMouseUp="signin_btn_PreviewMouseUp" Style="{DynamicResource Shit}" >
+            <Button Name="signin_btn" Content="Sign in" Margin="419,552,434,91" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE" Height="27"  VerticalContentAlignment="Stretch" BorderThickness="0" PreviewMouseDown="signin_btn_PreviewMouseDown" PreviewMouseUp="signin_btn_PreviewMouseUp" Style="{DynamicResource Shit}" Click="signin_btn_Click" >
                 <Button.Effect>
                     <DropShadowEffect Color="Black" Direction="320" ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
                 </Button.Effect>

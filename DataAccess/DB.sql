@@ -89,6 +89,13 @@ SELECT
 END
 RETURN
 
+CREATE PROCEDURE SampleSP @AccountID INT = NULL
+AS
+BEGIN
+	SELECT * FROM Accounts WHERE AccountID=COALESCE(@AccountID, 0)
+END
+RETURN
+
 /* Accounts_Register */
 CREATE PROCEDURE Accounts_Register @Username CHAR(16), @Password CHAR(96), @Salt CHAR(8), @AccountType CHAR(6), @Active BIT
 AS

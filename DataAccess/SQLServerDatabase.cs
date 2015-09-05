@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 using System.Collections.Generic;
 
@@ -439,6 +440,41 @@ namespace DataAccess
                 Close();
                 _semaphore.Release();
                 throw;
+            }
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <param name="procedureName"></param>
+        /// <param name="parameters"></param>
+        /// <returns></returns>
+        /// <remarks>Requires .NET Framework 4.5 above for asynchronous programming.</remarks>
+        public async Task<DataTable> CallSPReader(string tableName, string procedureName, params SqlParameter[] parameters)
+        {
+            using (var dataTable = new DataTable())
+            {
+                try
+                {
+                    Open();
+                    using (var command = new SqlCommand(procedureName, _sqlConnection) {
+                        CommandTimeout = 1000,
+                        CommandType = CommandType.StoredProcedure
+                    })
+                    {
+                        foreach (SqlParameter sqlp in parameters)
+                            command.Parameters.Add(sqlp);
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            dataTable.Load(reader);
+                            dataTable.TableName = tableName;
+                        }
+                    }
+                }
+                catch { Close(); throw; }
+                return dataTable;
             }
         }
         #endregion
