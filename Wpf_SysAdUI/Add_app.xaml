@@ -94,7 +94,7 @@
                        FontSize="11"/>
             </Grid>
         </Grid>
-        <Button x:Name="create_btn" Content="Create" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" PreviewMouseDown="create_btn_PreviewMouseDown" PreviewMouseUp="create_btn_PreviewMouseUp" Style="{DynamicResource Shit}" Margin="377,329,158,19">
+        <Button x:Name="create_btn" Content="Create" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" PreviewMouseDown="create_btn_PreviewMouseDown" PreviewMouseUp="create_btn_PreviewMouseUp" Style="{DynamicResource Shit}" Margin="377,329,158,19" Click="create_btn_Click">
             <Button.Effect>
                 <DropShadowEffect Color="Black" Direction="320" 
                                   ShadowDepth="6" BlurRadius="0" Opacity="0.5" />

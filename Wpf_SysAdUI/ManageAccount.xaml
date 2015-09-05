@@ -54,7 +54,7 @@
     <Grid Background="#FF6ABDDE">
         <Image Name="error" Source="{StaticResource error}" Height="25" Width="25" 
                Margin="399,127,12,118" Visibility="Collapsed" ToolTip="Password did not matched!"/>
-        <TextBox Controls:TextBoxHelper.Watermark="Username"
+        <TextBox Name="create_username" Controls:TextBoxHelper.Watermark="Username"
                  Controls:TextBoxHelper.ClearTextButton="True"
                  Margin="162,54,46,190"/>
         <PasswordBox Name="create_password" Controls:TextBoxHelper.Watermark="Password"

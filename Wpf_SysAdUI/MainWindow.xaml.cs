@@ -14,7 +14,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
 using System.Windows.Threading;
-
 using BusinessLogic;
 
 namespace Wpf_SysAdUI
@@ -61,23 +60,6 @@ namespace Wpf_SysAdUI
 
         private void signin_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
-
-            AnimationSet.Completed += (object s, EventArgs ex) =>
-            {
-                AnimationSet.Add(SlideBar, AnimationKind.Opacity, AnimationFactory.Create(AnimationType.DoubleAnimation, 100.0, TimeSpan.FromMilliseconds(100000), TimeSpan.FromMilliseconds(500)));
-                AnimationSet.Add(Inner_UIMain, AnimationKind.Opacity, AnimationFactory.Create(AnimationType.DoubleAnimation, 100.0, TimeSpan.FromMilliseconds(100000), TimeSpan.FromMilliseconds(500)));
-                AnimationSet.Run();
-
-            };
-            SlideBar.Visibility = Visibility.Visible;
-            Inner_UIMain.Visibility = Visibility.Visible;
-            HomeUI_inner.Visibility = Visibility.Visible;
-            AnimationSet.Add(LogIn, AnimationKind.TranslateX, AnimationFactory.Create(AnimationType.DoubleAnimation, 970.0, TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(0)));
-            AnimationSet.Run();
-            Account_name.Text = User_tb_login.Text;
-            Account_name.Visibility = Visibility.Visible;
-            set_userN_tb.Text = User_tb_login.Text;
-            set_pass_tb.Text = pass_login.Password.ToString();
             Animation.DropShadowOpacity(signin_btn, 0.4, TimeSpan.FromSeconds(0));
         }
 
@@ -87,7 +69,11 @@ namespace Wpf_SysAdUI
             dispatch.Interval = new TimeSpan(0,0,0,0,100);
             dispatch.Tick += dispatch_Tick;
             dispatch.Start();
-
+            //////
+            double kwh;
+            if (System.IO.File.Exists("kwh.txt") && double.TryParse(System.IO.File.ReadAllText("kwh.txt"), out kwh))
+                set_kwh_tb.Text = (Globals.KWH = kwh).ToString();
+            else set_kwh_tb.Text = (Globals.KWH = 0d).ToString();
         }
 
         void dispatch_Tick(object sender, EventArgs e)
@@ -224,6 +210,8 @@ namespace Wpf_SysAdUI
                 pass_login.Clear();
             
             }
+            //////
+            Globals.Logout();
         }
 
         private void RepUI_D_tile_MouseEnter(object sender, MouseEventArgs e)
@@ -730,9 +718,38 @@ namespace Wpf_SysAdUI
             save_btn.IsEnabled = true;
         }
 
-        private void save_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private async void save_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(save_btn, 0.0, TimeSpan.FromSeconds(0));
+
+            //////
+            //Check username
+            if (set_userN_tb.Text.Trim() == Globals.Account.Username) { }
+            else if (await Globals.UsernameExists(set_userN_tb.Text.Trim()))
+            {
+                MessageBox.Show("Username already taken.");
+                return;
+            }
+
+            //Check password
+            if (set_pass_tb.Text.Contains(' '))
+            {
+                MessageBox.Show("Passwords must not contain spaces.");
+                return;
+            }
+
+            //Php/KWh
+            double kwh;
+            if (!double.TryParse(set_kwh_tb.Text, out kwh))
+            {
+                MessageBox.Show("Please enter a valid price per kiloWatt-hour.");
+                return;
+            }
+
+            await Globals.ChangeUsername(set_userN_tb.Text.Trim());
+            await Globals.ChangePassword(set_pass_tb.Text);
+            System.IO.File.WriteAllText("kwh.txt", (Globals.KWH = kwh).ToString());
+            MessageBox.Show("Settings Saved!");
         }
 
         private void cancel_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -874,9 +891,36 @@ namespace Wpf_SysAdUI
         #region Functionality Codes
 
         //Sign in button
-        private void signin_btn_Click(object sender, RoutedEventArgs e)
+        private async void signin_btn_Click(object sender, RoutedEventArgs e)
         {
-            Globals.Login("", "");
+            string pw = "";
+            foreach (char c in pass_login.Password)
+                pw += c;
+            if (pw.Length == 0)
+            {
+                MessageBox.Show("Please enter your password.");
+                return;
+            }
+            if (!(await Globals.Login(User_tb_login.Text, pw)))
+            {
+                MessageBox.Show("Error login! :(");
+                return;
+            }
+            AnimationSet.Completed += (object s, EventArgs ex) =>
+            {
+                AnimationSet.Add(SlideBar, AnimationKind.Opacity, AnimationFactory.Create(AnimationType.DoubleAnimation, 100.0, TimeSpan.FromMilliseconds(100000), TimeSpan.FromMilliseconds(500)));
+                AnimationSet.Add(Inner_UIMain, AnimationKind.Opacity, AnimationFactory.Create(AnimationType.DoubleAnimation, 100.0, TimeSpan.FromMilliseconds(100000), TimeSpan.FromMilliseconds(500)));
+                AnimationSet.Run();
+            };
+            SlideBar.Visibility = Visibility.Visible;
+            Inner_UIMain.Visibility = Visibility.Visible;
+            HomeUI_inner.Visibility = Visibility.Visible;
+            AnimationSet.Add(LogIn, AnimationKind.TranslateX, AnimationFactory.Create(AnimationType.DoubleAnimation, 970.0, TimeSpan.FromMilliseconds(500), TimeSpan.FromMilliseconds(0)));
+            AnimationSet.Run();
+            Account_name.Text = User_tb_login.Text;
+            Account_name.Visibility = Visibility.Visible;
+            set_userN_tb.Text = User_tb_login.Text;
+            set_pass_tb.Text = pass_login.Password.ToString();
         }
         #endregion
     }

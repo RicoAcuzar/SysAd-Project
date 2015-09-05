@@ -89,13 +89,6 @@ SELECT
 END
 RETURN
 
-CREATE PROCEDURE SampleSP @AccountID INT = NULL
-AS
-BEGIN
-	SELECT * FROM Accounts WHERE AccountID=COALESCE(@AccountID, 0)
-END
-RETURN
-
 /* Accounts_Register */
 CREATE PROCEDURE Accounts_Register @Username CHAR(16), @Password CHAR(96), @Salt CHAR(8), @AccountType CHAR(6), @Active BIT
 AS
@@ -109,6 +102,7 @@ BEGIN
 END
 RETURN
 
+SELECT * FROM Accounts;
 /* Accounts_ChangePassword */
 CREATE PROCEDURE Accounts_ChangePassword @Username CHAR(16), @Password CHAR(96), @Salt CHAR(8)
 AS
@@ -123,11 +117,11 @@ END
 RETURN
 
 /* Accounts_GetSalt */
-CREATE PROCEDURE Accounts_GetSalt @Username CHAR(16), @Salt CHAR(8) OUTPUT
+CREATE PROCEDURE Accounts_GetSalt @Username CHAR(16)
 AS
 BEGIN
 	BEGIN TRY
-		SELECT @Salt=RTRIM(Salt) FROM Accounts WHERE Username=@Username;
+		SELECT RTRIM(Salt) FROM Accounts WHERE Username=@Username;
 	END TRY
 	BEGIN CATCH
 		EXECUTE General_Error;
@@ -135,17 +129,70 @@ BEGIN
 END
 RETURN
 
+DROP PROCEDURE SampleSP;
+CREATE PROCEDURE SampleSP @Username CHAR(16)
+AS
+BEGIN
+	BEGIN TRY
+		SELECT [Password] FROM Accounts WHERE Username=@Username;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+EXECUTE SampleSP @Username='root';
+
 /* Accounts_Login */
 CREATE PROCEDURE Accounts_Login @Username CHAR(16), @Password CHAR(96)
 AS
 BEGIN
 	BEGIN TRY
-		SELECT * FROM Accounts WHERE Username=@Username AND [Password]=@Password;
+		SELECT * FROM Accounts WHERE Username=@Username AND RTRIM([Password])=RTRIM(@Password);
 	END TRY
 	BEGIN CATCH
 		EXECUTE General_Error;
 	END CATCH
 END	
+RETURN
+
+/* Accounts_UsernameExists */
+CREATE PROCEDURE Accounts_UsernameExists @Username CHAR(16)
+AS
+BEGIN
+	BEGIN TRY
+		SELECT COUNT(*) FROM Accounts WHERE Username=@Username;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Accounts_ChangeUsername */
+CREATE PROCEDURE Accounts_ChangeUsername @AccountID INT, @Username CHAR(16)
+AS
+BEGIN
+	BEGIN TRY
+		UPDATE Accounts SET Username=@Username WHERE AccountID=@AccountID;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Accounts_ChangePassword */
+CREATE PROCEDURE Accounts_ChangePassword @AccountID INT, @Password CHAR(16)
+AS
+BEGIN
+	BEGIN TRY
+		UPDATE Accounts SET [Password]=@Password WHERE AccountID=@AccountID;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
 RETURN
 
 /* Appliances_AddAppliance */
@@ -189,6 +236,8 @@ BEGIN
 	END CATCH
 END
 RETURN
+
+SELECT * FROM Appliances;
 
 /* Proc_StateChanges */
 CREATE PROCEDURE States_ChangeState @AccountID INT, @ApplianceID INT, @Value SMALLINT, @DateAndTime DATETIME = NULL

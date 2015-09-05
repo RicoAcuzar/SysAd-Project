@@ -104,6 +104,15 @@ namespace DataAccess
         {
             _serial.Close();
         }
+
+        /// <summary>
+        /// Writes a string on to the device.
+        /// </summary>
+        /// <param name="text"></param>
+        public void Write(string text)
+        {
+            if (_serial.IsOpen) _serial.Write(text);
+        }
         #endregion
 
 

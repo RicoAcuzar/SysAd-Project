@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using BusinessLogic;
 
 namespace Wpf_SysAdUI
 {
@@ -23,13 +24,40 @@ namespace Wpf_SysAdUI
         public ManageAccount()
         {
             InitializeComponent();
-            
         }
        
 
-        private void create_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private async void create_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(create_btn, 0.0, TimeSpan.FromMilliseconds(0));
+            //////
+            //Check username
+            if (create_username.Text.Trim() == "") { }
+            else if (await Globals.UsernameExists(create_username.Text.Trim()))
+            {
+                MessageBox.Show("Username already taken.");
+                return;
+            }
+
+            //Check password
+            string pw1 = "", pw2 = "";
+            foreach (char c in create_password.Password)
+                pw1 += c;
+            foreach (char c in retype_password.Password)
+                pw2 += c;
+            if (pw1.Contains(' ') || pw2.Contains(' '))
+            {
+                MessageBox.Show("Passwords must not contain spaces.");
+                return;
+            }
+            if (pw1 != pw2)
+            {
+                MessageBox.Show("Passwords does not match.");
+                return;
+            }
+
+            await Globals.Register(create_username.Text, pw1);
+            MessageBox.Show("Account successfully created!");
         }
 
         private void create_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)

@@ -443,6 +443,47 @@ namespace DataAccess
             }
         }
 
+        public async Task CallSPNonQueryAsync(string procedureName, params SqlParameter[] parameters)
+        {
+            try
+            {
+                Open();
+                using (var command = new SqlCommand(procedureName, _sqlConnection)
+                {
+                    CommandTimeout = 1000,
+                    CommandType = CommandType.StoredProcedure
+                })
+                {
+                    foreach (SqlParameter sqlp in parameters)
+                        command.Parameters.Add(sqlp);
+                    await command.ExecuteNonQueryAsync();
+                }
+                Close();
+            }
+            catch { Close(); throw; }
+        }
+
+        public async Task<object> CallSPScalarAsync(string tableName, string procedureName, params SqlParameter[] parameters)
+        {
+            object o = null;
+            try
+            {
+                Open();
+                using (var command = new SqlCommand(procedureName, _sqlConnection)
+                {
+                    CommandTimeout = 1000,
+                    CommandType = CommandType.StoredProcedure
+                })
+                {
+                    foreach (SqlParameter sqlp in parameters)
+                        command.Parameters.Add(sqlp);
+                    o = await command.ExecuteScalarAsync();
+                }
+                Close();
+            }
+            catch { Close(); throw; }
+            return o;
+        }
 
         /// <summary>
         /// 
@@ -452,7 +493,7 @@ namespace DataAccess
         /// <param name="parameters"></param>
         /// <returns></returns>
         /// <remarks>Requires .NET Framework 4.5 above for asynchronous programming.</remarks>
-        public async Task<DataTable> CallSPReader(string tableName, string procedureName, params SqlParameter[] parameters)
+        public async Task<DataTable> CallSPReaderAsync(string tableName, string procedureName, params SqlParameter[] parameters)
         {
             using (var dataTable = new DataTable())
             {
@@ -472,6 +513,7 @@ namespace DataAccess
                             dataTable.TableName = tableName;
                         }
                     }
+                    Close();
                 }
                 catch { Close(); throw; }
                 return dataTable;

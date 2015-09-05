@@ -162,5 +162,10 @@ namespace Wpf_SysAdUI
                 consump_prev.Text = ec_tb.Text + " Watts";
         }
 
+        private void create_btn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
     }
 }

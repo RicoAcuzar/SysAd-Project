@@ -80,7 +80,6 @@ namespace BusinessLogic
         //
         public static Account GetAccount()
         {
-
             return null;
         }
         #endregion
