@@ -2,7 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:Custom="http://metro.mahapps.com/winfx/xaml/shared" x:Class="Wpf_SysAdUI.ManageSched"
-        Height="509.82" Width="460.825" ShowIconOnTitleBar="True" Title="Manage Schedule" Icon="Icons/Screenshot_12_ (1).png" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderBrush="SkyBlue">
+        Height="509.82" Width="460.825" ShowIconOnTitleBar="True" Title="Manage Schedule" Icon="Icons/Screenshot_12_ (1).png" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderBrush="SkyBlue" Loaded="MetroWindow_Loaded">
     <Controls:MetroWindow.Resources>
         <Style x:Key="Shit" TargetType="{x:Type Button}">
             <Setter Property="Controls:ButtonHelper.CornerRadius" Value="3"/>
@@ -65,9 +65,9 @@
         <ListView Margin="10,41,10,192" Name="list_sched" SelectionChanged="list_sched_SelectionChanged">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Time on" Width="70" DisplayMemberBinding="{Binding Time1String}" />
-                    <GridViewColumn Header="Time off" Width="70" DisplayMemberBinding="{Binding Time2String}"/>
-                    <GridViewColumn Header="Device" Width="120" DisplayMemberBinding="{Binding Device}"/>
+                    <GridViewColumn Header="Date and Time" Width="100" DisplayMemberBinding="{Binding LowerLimit}" />
+                    <GridViewColumn Header="State" Width="45" DisplayMemberBinding="{Binding Value}"/>
+                    <GridViewColumn Header="Device" Width="120" DisplayMemberBinding="{Binding Name}"/>
                     <GridViewColumn Header="Description" Width="170" DisplayMemberBinding="{Binding Description}"/>
                 </GridView>
             </ListView.View>
@@ -89,17 +89,17 @@
         <Label Content="Time off:" FontSize="9" Margin="82,294,301,166"/>
         <Label Content="Device:" FontSize="9" Margin="159,294,224,166"/>
         <Label Content="Description:" FontSize="9" Margin="269,294,114,166"/>
-        <Button x:Name="save_btn" Content="save" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0"  Style="{DynamicResource Shit}" Margin="200,360,148,91" PreviewMouseDown="save_btn_PreviewMouseDown" PreviewMouseUp="save_btn_PreviewMouseUp" >
+        <Button x:Name="save_btn" Content="save" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0"  Style="{DynamicResource Shit}" Margin="200,360,148,91" PreviewMouseDown="save_btn_PreviewMouseDown" PreviewMouseUp="save_btn_PreviewMouseUp" Click="save_btn_Click" >
             <Button.Effect>
                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
             </Button.Effect>
         </Button>
-        <Button x:Name="edit_btn" Content="edit" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" Style="{DynamicResource Shit}" Margin="323,360,25,91" PreviewMouseDown="edit_btn_PreviewMouseDown" PreviewMouseUp="edit_btn_PreviewMouseUp" >
+        <Button x:Name="edit_btn" Content="edit" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" Style="{DynamicResource Shit}" Margin="323,360,25,91" PreviewMouseDown="edit_btn_PreviewMouseDown" PreviewMouseUp="edit_btn_PreviewMouseUp" Click="edit_btn_Click" >
             <Button.Effect>
                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
             </Button.Effect>
         </Button>
-        <Button x:Name="delete_btn" Content="Delete" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0"  Style="{DynamicResource Shit}" Margin="200,428,148,24" PreviewMouseDown="delete_btn_PreviewMouseDown" PreviewMouseUp="delete_btn_PreviewMouseUp" >
+        <Button x:Name="delete_btn" Content="Delete" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0"  Style="{DynamicResource Shit}" Margin="200,428,148,24" PreviewMouseDown="delete_btn_PreviewMouseDown" PreviewMouseUp="delete_btn_PreviewMouseUp" Click="delete_btn_Click" >
             <Button.Effect>
                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
             </Button.Effect>

@@ -23,23 +23,24 @@ namespace Wpf_SysAdUI
     /// </summary>
     public partial class MainWindow 
     {
+        private List<Tuple<int, string>> users;
+
         //
         // Animation Codes
         //
         #region Animation Codes
         public MainWindow()
         {
-            InitializeComponent();
+            /*InitializeComponent();
             List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005,8,20),Time=new DateTime(1,1,1,11,00,00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012,8,23), Time = new DateTime(1,1,1,11,30,00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
             items.Add(new User() { Date = new DateTime(2013,8,10), Time = new DateTime(1,1,1,11,02,00), userName = "dsadsaddsdssadsadsa", Event = "dsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             items.Add(new User() { Date = new DateTime(2015, 8, 30), Time = new DateTime(1, 1, 1, 11, 50, 00), userName = "aaaaaaaadsadsaddsdssadsadsa", Event = "aaaaaaadsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             lvUsers.ItemsSource = items;
-            reports.ItemsSource = items;
-            
+            reports.ItemsSource = items;*/
+            users = new List<Tuple<int, string>>();
         }
-
 
         private void SlideBar_MouseEnter(object sender, MouseEventArgs e)
         {
@@ -50,7 +51,6 @@ namespace Wpf_SysAdUI
         {
             Animation.Width(SlideBar, 90.0, TimeSpan.FromMilliseconds(200));
         }
-
         
         private void signin_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -63,7 +63,14 @@ namespace Wpf_SysAdUI
             Animation.DropShadowOpacity(signin_btn, 0.4, TimeSpan.FromSeconds(0));
         }
 
-        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        public class Log
+        {
+            public string DateAndTime { get; set; }
+            public string User { get; set; }
+            public string Event { get; set; }
+        }
+
+        private async void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             DispatcherTimer dispatch = new DispatcherTimer();
             dispatch.Interval = new TimeSpan(0,0,0,0,100);
@@ -74,6 +81,25 @@ namespace Wpf_SysAdUI
             if (System.IO.File.Exists("kwh.txt") && double.TryParse(System.IO.File.ReadAllText("kwh.txt"), out kwh))
                 set_kwh_tb.Text = (Globals.KWH = kwh).ToString();
             else set_kwh_tb.Text = (Globals.KWH = 0d).ToString();
+            //if (Globals.LoadMicrocontroller("COM3")) Globals.Open();
+
+            var usrs = await Globals.GetUsers();
+            for (int i = 0; i < usrs.Rows.Count; i++)
+                users.Add(new Tuple<int, string>((int)usrs.Rows[i][0], usrs.Rows[i][1].ToString()));
+            List<Log> lhl = new List<Log>();
+            var logs = await Globals.GetLogs();
+            for (int i = 0; i < logs.Rows.Count; i++)
+                lhl.Add(new Log() {
+                    DateAndTime = string.Format("{0:dddd, MMMM d, yyyy h:m:s tt}", DateTime.Parse(logs.Rows[i][1].ToString())),
+                    User = users.Find(x => x.Item1 == (int)logs.Rows[i][0]).Item2,
+                    Event = logs.Rows[i][3].ToString()
+                });
+            lvUsers.ItemsSource = lhl;
+        }
+
+        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            //Globals.Close();
         }
 
         void dispatch_Tick(object sender, EventArgs e)
@@ -475,19 +501,28 @@ namespace Wpf_SysAdUI
             }
         }
 
-        private void RepUI_D_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private async void RepUI_D_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            
             reports.IsEnabled = true;
             reports.Visibility = Visibility.Visible;
             //sample adding data on tables
-            List<User> items = new List<User>();
+            /*List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
             items.Add(new User() { Date = new DateTime(2013, 8, 10), Time = new DateTime(1, 1, 1, 11, 02, 00), userName = "dsadsaddsdssadsadsa", Event = "dsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             items.Add(new User() { Date = new DateTime(2015, 8, 30), Time = new DateTime(1, 1, 1, 11, 50, 00), userName = "aaaaaaaadsadsaddsdssadsadsa", Event = "aaaaaaadsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             //reports.ItemsSource = items;
-            reports.ItemsSource = items.OrderBy(item => item.Date).ToArray();
+            reports.ItemsSource = items.OrderBy(item => item.Date).ToArray();*/
+            List<Log> ll = new List<Log>();
+            var logs = await Globals.GetDailyLogs();
+            for (int i = 0; i < logs.Rows.Count; i++)
+                ll.Add(new Log()
+                {
+                    DateAndTime = string.Format("{0:dddd, MMMM d, yyyy h:m:s tt}", DateTime.Parse(logs.Rows[i][1].ToString())),
+                    User = users.Find(x => x.Item1 == (int)logs.Rows[i][0]).Item2,
+                    Event = logs.Rows[i][3].ToString()
+                });
+            reports.ItemsSource = ll;
             AnimationSet.Completed += (object s, EventArgs ex) =>
             {
                 AnimationSet.Add(tiles_grid, AnimationKind.TranslateY, AnimationFactory.Create(AnimationType.DoubleAnimation, -150.0, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(0)));
@@ -507,18 +542,28 @@ namespace Wpf_SysAdUI
             RepUI_Y_tile.Background = new SolidColorBrush(Color.FromArgb(80, 67, 178, 226));
         }
 
-        private void RepUI_W_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private async void RepUI_W_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             reports.IsEnabled = true;
             reports.Visibility = Visibility.Visible;
             //sample adding data on tables
-            List<User> items = new List<User>();
+            /*List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
             items.Add(new User() { Date = new DateTime(2013, 8, 10), Time = new DateTime(1, 1, 1, 11, 02, 00), userName = "dsadsaddsdssadsadsa", Event = "dsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             items.Add(new User() { Date = new DateTime(2015, 8, 30), Time = new DateTime(1, 1, 1, 11, 50, 00), userName = "aaaaaaaadsadsaddsdssadsadsa", Event = "aaaaaaadsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             reports.ItemsSource = items;
-            reports.ItemsSource = items.OrderBy(item => item.Date).ToArray();
+            reports.ItemsSource = items.OrderBy(item => item.Date).ToArray();*/
+            List<Log> ll = new List<Log>();
+            var logs = await Globals.GetWeeklyLogs();
+            for (int i = 0; i < logs.Rows.Count; i++)
+                ll.Add(new Log()
+                {
+                    DateAndTime = string.Format("{0:dddd, MMMM d, yyyy h:m:s tt}", DateTime.Parse(logs.Rows[i][1].ToString())),
+                    User = users.Find(x => x.Item1 == (int)logs.Rows[i][0]).Item2,
+                    Event = logs.Rows[i][3].ToString()
+                });
+            reports.ItemsSource = ll;
             AnimationSet.Completed += (object s, EventArgs ex) =>
             {
                 AnimationSet.Add(tiles_grid, AnimationKind.TranslateY, AnimationFactory.Create(AnimationType.DoubleAnimation, -150.0, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(0)));
@@ -537,18 +582,28 @@ namespace Wpf_SysAdUI
             RepUI_D_tile.Background = new SolidColorBrush(Color.FromArgb(80, 67, 178, 226));
         }
 
-        private void RepUI_M_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private async void RepUI_M_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             reports.IsEnabled = true;
             reports.Visibility = Visibility.Visible;
             //sample adding data on tables
-            List<User> items = new List<User>();
+            /*List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
             items.Add(new User() { Date = new DateTime(2013, 8, 10), Time = new DateTime(1, 1, 1, 11, 02, 00), userName = "dsadsaddsdssadsadsa", Event = "dsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             items.Add(new User() { Date = new DateTime(2015, 8, 30), Time = new DateTime(1, 1, 1, 11, 50, 00), userName = "aaaaaaaadsadsaddsdssadsadsa", Event = "aaaaaaadsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             //reports.ItemsSource = items;
-            reports.ItemsSource = items.OrderBy(item => item.Date.Month).ToArray();            
+            reports.ItemsSource = items.OrderBy(item => item.Date.Month).ToArray();*/
+            List<Log> ll = new List<Log>();
+            var logs = await Globals.GetMonthlyLogs();
+            for (int i = 0; i < logs.Rows.Count; i++)
+                ll.Add(new Log()
+                {
+                    DateAndTime = string.Format("{0:dddd, MMMM d, yyyy h:m:s tt}", DateTime.Parse(logs.Rows[i][1].ToString())),
+                    User = users.Find(x => x.Item1 == (int)logs.Rows[i][0]).Item2,
+                    Event = logs.Rows[i][3].ToString()
+                });
+            reports.ItemsSource = ll;
             AnimationSet.Completed += (object s, EventArgs ex) =>
             {
                 AnimationSet.Add(tiles_grid, AnimationKind.TranslateY, AnimationFactory.Create(AnimationType.DoubleAnimation, -150.0, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(0)));
@@ -567,18 +622,28 @@ namespace Wpf_SysAdUI
             RepUI_D_tile.Background = new SolidColorBrush(Color.FromArgb(80, 67, 178, 226));
         }
 
-        private void RepUI_Y_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private async void RepUI_Y_tile_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             reports.IsEnabled = true;
             reports.Visibility = Visibility.Visible;
             //sample adding data on tables
-            List<User> items = new List<User>();
+            /*List<User> items = new List<User>();
             items.Add(new User() { Date = new DateTime(2005, 8, 20), Time = new DateTime(1, 1, 1, 11, 00, 00), userName = "dsadsa", Event = "dsasfgjdsfjdsakfsafdk" });
             items.Add(new User() { Date = new DateTime(2012, 8, 23), Time = new DateTime(1, 1, 1, 11, 30, 00), userName = "dsadsadsadsadsa", Event = "dsasfgjdsfjdsakfsafdsaddk" });
             items.Add(new User() { Date = new DateTime(2013, 8, 10), Time = new DateTime(1, 1, 1, 11, 02, 00), userName = "dsadsaddsdssadsadsa", Event = "dsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             items.Add(new User() { Date = new DateTime(2015, 8, 30), Time = new DateTime(1, 1, 1, 11, 50, 00), userName = "aaaaaaaadsadsaddsdssadsadsa", Event = "aaaaaaadsasdsadsadsadfgjdsfjdsakfsafdsaddk" });
             //reports.ItemsSource = items;
-            reports.ItemsSource = items.OrderBy(item => item.Date.Year).ToArray();                        
+            reports.ItemsSource = items.OrderBy(item => item.Date.Year).ToArray();*/
+            List<Log> ll = new List<Log>();
+            var logs = await Globals.GetYearlyLogs();
+            for (int i = 0; i < logs.Rows.Count; i++)
+                ll.Add(new Log()
+                {
+                    DateAndTime = string.Format("{0:dddd, MMMM d, yyyy h:m:s tt}", DateTime.Parse(logs.Rows[i][1].ToString())),
+                    User = users.Find(x => x.Item1 == (int)logs.Rows[i][0]).Item2,
+                    Event = logs.Rows[i][3].ToString()
+                });
+            reports.ItemsSource = ll;
             AnimationSet.Completed += (object s, EventArgs ex) =>
             {
                 AnimationSet.Add(tiles_grid, AnimationKind.TranslateY, AnimationFactory.Create(AnimationType.DoubleAnimation, -150.0, TimeSpan.FromMilliseconds(300), TimeSpan.FromMilliseconds(0)));

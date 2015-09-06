@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:Custom="http://metro.mahapps.com/winfx/xaml/shared" x:Class="Wpf_SysAdUI.MainWindow"
-        ShowIconOnTitleBar="True" Title="CASA" Height="700" Width="970" Icon="Icons/Screenshot_12_ (1).png" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded">
+        ShowIconOnTitleBar="True" Title="CASA" Height="700" Width="970" Icon="Icons/Screenshot_12_ (1).png" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Loaded="MetroWindow_Loaded" Closing="MetroWindow_Closing">
     <Controls:MetroWindow.Resources>
 
         <Style x:Key="Shit" TargetType="{x:Type Button}">
@@ -135,14 +135,13 @@
                 <Grid Name="HomeUI_inner" Margin="110,150,20,20" Opacity="100" Visibility="Collapsed">
                     <StackPanel Margin="10,10,10,381" Height="110" Background="#FFD0E0F7" Orientation="Horizontal">
                         <Path Style="{StaticResource InfoIcon}" Fill="#FF9696F9" Margin="99.167,16.416,0,16.416" Stretch="Fill" Height="77.168" Width="79.833"/>
-                        <Label FontSize="30" Content="Your current power usage is HIGH" Foreground="#FFBB6767" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40,0,0,0"/>
+                        <Label Name="lbl_usage" FontSize="30" Content="There are currently no active devices." Foreground="#FFBB6767" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40,0,0,0"/>
                     </StackPanel>
                     <ListView Margin="10,138,10,120" Name="lvUsers" >
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Date" Width="120" DisplayMemberBinding="{Binding DateString}" />
-                                <GridViewColumn Header="Time" Width="100" DisplayMemberBinding="{Binding TimeString}"/>
-                                <GridViewColumn Header="User" Width="150" DisplayMemberBinding="{Binding userName}"/>
+                                <GridViewColumn Header="Date" Width="220" DisplayMemberBinding="{Binding DateAndTime}" />
+                                <GridViewColumn Header="User" Width="150" DisplayMemberBinding="{Binding User}"/>
                                 <GridViewColumn Header="Event" Width="438" DisplayMemberBinding="{Binding Event}"/>
                             </GridView>
                         </ListView.View>
@@ -159,9 +158,8 @@
                     <ListView Margin="10,238,10,73" Name="reports" Opacity="0" Visibility="Collapsed" IsEnabled="False">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Date" Width="120" DisplayMemberBinding="{Binding DateString}" />
-                                <GridViewColumn Header="Time" Width="100" DisplayMemberBinding="{Binding TimeString}"/>
-                                <GridViewColumn Header="User" Width="150" DisplayMemberBinding="{Binding userName}"/>
+                                <GridViewColumn Header="Date" Width="220" DisplayMemberBinding="{Binding DateAndTime}" />
+                                <GridViewColumn Header="User" Width="150" DisplayMemberBinding="{Binding User}"/>
                                 <GridViewColumn Header="Event" Width="438" DisplayMemberBinding="{Binding Event}"/>
                             </GridView>
                         </ListView.View>

@@ -3,23 +3,6 @@
 Table Definition
 
 */
-DROP TABLE ApplicationLog;
-DROP TABLE StateChanges;
-DROP TABLE Schedules;
-DROP TABLE Appliances;
-DROP TABLE Accounts;
-DROP PROCEDURE Schedules_EditSchedule;
-DROP PROCEDURE Schedules_AddSchedule;
-DROP PROCEDURE Logs_Log;
-DROP PROCEDURE Proc_StateChanges;
-DROP PROCEDURE Appliances_EditAppliance;
-DROP PROCEDURE Appliances_AddAppliance;
-DROP PROCEDURE Accounts_Login;
-DROP PROCEDURE Accounts_GetSalt;
-DROP PROCEDURE Accounts_ChangePassword;
-DROP PROCEDURE Accounts_Register;
-DROP PROCEDURE General_Error;
-
 CREATE TABLE Accounts
 (
 AccountID INT PRIMARY KEY IDENTITY(0,1),
@@ -62,13 +45,13 @@ Value SMALLINT NOT NULL,
 DateAndTime DATETIME NOT NULL
 );
 
-CREATE TABLE ApplicationLog
+CREATE TABLE ApplicationLogs
 (
 AccountID INT FOREIGN KEY REFERENCES Accounts(AccountID) NOT NULL,
+[DateTime] DATETIME NOT NULL,
 Importance CHAR(8) NOT NULL, /* LOW, NORMAL, HIGH, CRITICAL */
 [Message] VARCHAR(100) NOT NULL
 );
-
 
 /*
 
@@ -104,7 +87,7 @@ RETURN
 
 SELECT * FROM Accounts;
 /* Accounts_ChangePassword */
-CREATE PROCEDURE Accounts_ChangePassword @Username CHAR(16), @Password CHAR(96), @Salt CHAR(8)
+/*CREATE PROCEDURE Accounts_ChangePassword @Username CHAR(16), @Password CHAR(96), @Salt CHAR(8)
 AS
 BEGIN
 	BEGIN TRY
@@ -114,7 +97,7 @@ BEGIN
 		EXECUTE General_Error;
 	END CATCH
 END
-RETURN
+RETURN*/
 
 /* Accounts_GetSalt */
 CREATE PROCEDURE Accounts_GetSalt @Username CHAR(16)
@@ -128,20 +111,6 @@ BEGIN
 	END CATCH
 END
 RETURN
-
-DROP PROCEDURE SampleSP;
-CREATE PROCEDURE SampleSP @Username CHAR(16)
-AS
-BEGIN
-	BEGIN TRY
-		SELECT [Password] FROM Accounts WHERE Username=@Username;
-	END TRY
-	BEGIN CATCH
-		EXECUTE General_Error;
-	END CATCH
-END
-RETURN
-EXECUTE SampleSP @Username='root';
 
 /* Accounts_Login */
 CREATE PROCEDURE Accounts_Login @Username CHAR(16), @Password CHAR(96)
@@ -195,6 +164,19 @@ BEGIN
 END
 RETURN
 
+/* Accounts_GetUsers */
+CREATE PROCEDURE Accounts_GetUsers
+AS
+BEGIN
+	BEGIN TRY
+		SELECT AccountID,Username FROM Accounts;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
 /* Appliances_AddAppliance */
 CREATE PROCEDURE Appliances_AddAppliance @Name CHAR(16), @ApplianceType CHAR(16), @Wattage REAL, @PinID TINYINT, @IsDigital BIT, @Active BIT, @Restricted BIT, @AddedBy INT
 AS
@@ -237,7 +219,44 @@ BEGIN
 END
 RETURN
 
-SELECT * FROM Appliances;
+/* Appliances_GetPin */
+CREATE PROCEDURE Appliances_GetPin @ApplianceID INT
+AS
+BEGIN
+	BEGIN TRY
+		SELECT PinID FROM Appliances WHERE ApplianceID=@ApplianceID;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Appliances_GetName */
+CREATE PROCEDURE Appliances_GetName @ApplianceID INT
+AS
+BEGIN
+	BEGIN TRY
+		SELECT Name FROM Appliances WHERE ApplianceID=@ApplianceID;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Appliances_GetAppliances */
+CREATE PROCEDURE Appliances_GetAppliances
+AS
+BEGIN
+	BEGIN TRY
+		SELECT * FROM Appliances;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
 
 /* Proc_StateChanges */
 CREATE PROCEDURE States_ChangeState @AccountID INT, @ApplianceID INT, @Value SMALLINT, @DateAndTime DATETIME = NULL
@@ -258,7 +277,83 @@ CREATE PROCEDURE Logs_Log @AccountID INT = NULL, @Importance CHAR(8), @Message V
 AS
 BEGIN
 	BEGIN TRY
-		INSERT INTO ApplicationLog(AccountID, Importance, [Message]) VALUES(@AccountID, @Importance, @Message);
+		INSERT INTO ApplicationLogs(AccountID, [DateTime], Importance, [Message]) VALUES(@AccountID, GETDATE(), @Importance, @Message);
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Logs_DailyReports */
+CREATE PROCEDURE Logs_DailyReports
+AS
+BEGIN
+	BEGIN TRY
+		SELECT * FROM ApplicationLogs WHERE
+		CONVERT(DATE, [DateTime])=CONVERT(DATE, CURRENT_TIMESTAMP)
+		ORDER BY [DateTime] DESC;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Logs_WeekReports */
+CREATE PROCEDURE Logs_WeekReports
+AS
+BEGIN
+	BEGIN TRY
+		SET DATEFIRST 1;/* Monday is the start of the week */
+		SELECT * FROM ApplicationLogs WHERE
+		[DateTime] >= DATEADD(DAY, 1-DATEPART(DW, GETDATE()), CONVERT(DATE, GETDATE())) AND
+		[DateTime] < DATEADD(DAY, 8-DATEPART(DW, GETDATE()), CONVERT(DATE,GETDATE()))
+		ORDER BY [DateTime] DESC;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Logs_MonthlyReports */
+CREATE PROCEDURE Logs_MonthlyReports
+AS
+BEGIN
+	BEGIN TRY
+		SELECT * FROM ApplicationLogs WHERE
+		YEAR([DateTime]) = YEAR(GETDATE()) AND
+		MONTH([DateTime]) = MONTH(GETDATE())
+		ORDER BY [DateTime] DESC;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Logs_YearlyReports */
+CREATE PROCEDURE Logs_YearlyReports
+AS
+BEGIN
+	BEGIN TRY
+		SELECT * FROM ApplicationLogs WHERE
+		YEAR([DateTime]) = YEAR(GETDATE())
+		ORDER BY [DateTime] DESC;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Logs_Home */
+CREATE PROCEDURE Logs_Home
+AS
+BEGIN
+	BEGIN TRY
+		SELECT * FROM ApplicationLogs ORDER BY [DateTime] DESC;
 	END TRY
 	BEGIN CATCH
 		EXECUTE General_Error;
@@ -292,6 +387,19 @@ BEGIN
 		LowerLimit=COALESCE(@LowerLimit, ApplianceID),
 		UpperLimit=@UpperLimit
 		WHERE ScheduleID=@ScheduleID;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Schedules_GetSchedules */
+CREATE PROCEDURE Schedules_GetSchedules
+AS
+BEGIN
+	BEGIN TRY
+		SELECT * FROM Schedules;
 	END TRY
 	BEGIN CATCH
 		EXECUTE General_Error;
@@ -399,22 +507,30 @@ Data
 
 */
 /* Accounts */
-EXECUTE Accounts_Register @Username='device', @Password='eY2JfQw6eXWbD1zrokOtrqQeiJj/3dZ6VRBLvgUAzb33DdmnAdcziBP8Rt0zsuVvXQBmRy/Ov2RwRpRUxamT+2RldmljZQ==', @Salt='device', @AccountType='DEVICE', @Active=1;
 EXECUTE Accounts_Register @Username='root', @Password='ma3CMbBFMx5RSlFrS3aA9YjjgjITq+kBc4vDrWey9vyzxk77k9GAAliNPMwaSe+64c4gy0PfNrOGUfEfp1Z46HJvb3Q=', @Salt='root', @AccountType='ROOT', @Active=1;
-EXECUTE Accounts_Register @Username='admin', @Password='x61Ey612Kl2gpFL56FT9weDnpSo4AV8j8+qx2AuTHdRyY036xxzTTrw10Wq3+4qQyB+XURPWx1ONxp3Y3pB37GFkbWlu', @Salt='admin', @AccountType='ADMIN', @Active=1;
 EXECUTE Accounts_Register @Username='user', @Password='sUNhQEwHj/1UnAPbRDw/7eLz5TTXP3j3cwHtl9SkNqn9nbBe6LMlwK02Q4tD/shRDCBPwcHtsh0JQcAOniwc4nVzZXI=', @Salt='user', @AccountType='NORMAL', @Active=1;
 SELECT * FROM Accounts;
 
 /* Appliances */
-EXECUTE	Appliances_AddAppliance @Name='LED', @ApplianceType='Light', @Wattage=40, @PinID=2, @IsDigital=1, @Active=1, @Restricted=0, @AddedBy=1;
-EXECUTE	Appliances_AddAppliance @Name='Garage Light', @ApplianceType='Light', @Wattage=40, @PinID=3, @IsDigital=1, @Active=0, @Restricted=0, @AddedBy=1;
-EXECUTE	Appliances_AddAppliance @Name='Sony TV', @ApplianceType='TV', @Wattage=400, @PinID=4, @IsDigital=1, @Active=1, @Restricted=0, @AddedBy=2;
-EXECUTE	Appliances_AddAppliance @Name='Asus', @ApplianceType='Computer', @Wattage=300, @PinID=5, @IsDigital=1, @Active=1, @Restricted=1, @AddedBy=2;
+EXECUTE	Appliances_AddAppliance @Name='Light1', @ApplianceType='Light', @Wattage=20, @PinID=1, @IsDigital=1, @Active=1, @Restricted=0, @AddedBy=0;
+EXECUTE	Appliances_AddAppliance @Name='Light2', @ApplianceType='Light', @Wattage=30, @PinID=2, @IsDigital=1, @Active=1, @Restricted=0, @AddedBy=0;
 SELECT * FROM Appliances;
 
 /* StateChanges */
 EXECUTE States_ChangeState @AccountID=0, @ApplianceID=0, @Value=0;
 EXECUTE States_ChangeState @AccountID=0, @ApplianceID=1, @Value=0;
-EXECUTE States_ChangeState @AccountID=0, @ApplianceID=2, @Value=0;
-EXECUTE States_ChangeState @AccountID=0, @ApplianceID=3, @Value=0;
-SELECT * FROM Appliances;
+SELECT * FROM StateChanges;
+EXECUTE States_ChangeState @AccountID=0, @ApplianceID=0, @Value=1;
+EXECUTE States_ChangeState @AccountID=0, @ApplianceID=1, @Value=1;
+
+/* ApplicationLogs */
+EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='asdfasdfasdf';
+EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='aswerg';
+EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='asdfasdwreherfasdf';
+EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='sdgfhbdfgn';
+EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='awer';
+EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='xvcbzcvb';
+EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='uio;iyol';
+EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='567yuk';
+EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='4ywertyerty';
+EXECUTE Logs_Home;

@@ -68,20 +68,5 @@ namespace BusinessLogic
             IsActive = isActive;
         }
         #endregion
-
-
-        //
-        // Static Methods
-        //
-        #region Static Methods
-
-        //
-        // TODO: use await and async
-        //
-        public static Account GetAccount()
-        {
-            return null;
-        }
-        #endregion
     }
 }

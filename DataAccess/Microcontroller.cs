@@ -23,6 +23,11 @@ namespace DataAccess
         /// Serial port conduit for computer to microcontroller communication.
         /// </summary>
         private SerialPort _serial;
+
+        /// <summary>
+        /// Holds the states of the sockets on the device.
+        /// </summary>
+        private bool[] _states;
         #endregion
 
 
@@ -54,6 +59,14 @@ namespace DataAccess
         {
             get { return _serial.IsOpen; }
         }
+
+        /// <summary>
+        /// Gets the states of the sockets.
+        /// </summary>
+        public bool[] States
+        {
+            get { return _states; }
+        }
         #endregion
 
 
@@ -80,6 +93,8 @@ namespace DataAccess
                 if (ErrorReceived != null)
                     ErrorReceived(sender, e);
             };
+            //                      sockA  sockB  led
+            _states = new bool[3] { false, false, false };
         }
         #endregion
 
@@ -113,6 +128,24 @@ namespace DataAccess
         {
             if (_serial.IsOpen) _serial.Write(text);
         }
+
+        /// <summary>
+        /// Sends a command to the device.
+        /// </summary>
+        /// <param name="command">Command to be sent.</param>
+        public void SendCommand(Command command)
+        {
+            if (_serial.IsOpen)
+            {
+                _serial.Write((char)command + "");
+                if (command == Command.TurnOffSocketA) _states[0] = false;
+                else if (command == Command.TurnOnSocketA) _states[0] = true;
+                else if (command == Command.TurnOffSocketB) _states[1] = false;
+                else if (command == Command.TurnOnSocketB) _states[1] = true;
+                else if (command == Command.TurnOffLED) _states[2] = false;
+                else _states[2] = true;
+            }
+        }
         #endregion
 
 
@@ -130,6 +163,22 @@ namespace DataAccess
         /// Occurs when an error occurs.
         /// </summary>
         public event SerialErrorReceivedEventHandler ErrorReceived;
+        #endregion
+
+
+        //
+        // Data Definitions
+        //
+        #region Data Definitions
+        public enum Command : byte
+        {
+            TurnOffSocketA = 65,
+            TurnOnSocketA,
+            TurnOffSocketB,
+            TurnOnSocketB,
+            TurnOffLED,
+            TurnOnLED
+        }
         #endregion
 
 

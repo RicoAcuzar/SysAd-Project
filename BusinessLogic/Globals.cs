@@ -155,6 +155,11 @@ namespace BusinessLogic
                 new SqlParameter("@AccountType", SqlDbType.Char, 6) { Value = "NORMAL" },
                 new SqlParameter("@Active", SqlDbType.Bit) { Value = 1 });
         }
+
+        public static async Task<DataTable> GetUsers()
+        {
+            return await _database.CallSPReaderAsync("Accounts", "Accounts_GetUsers");
+        }
         #endregion
 
         //
@@ -188,12 +193,78 @@ namespace BusinessLogic
                 new SqlParameter("@Restricted", SqlDbType.Bit) { Value = restricted });
         }
 
-        public static async Task SwitchAppliance(int applianceID, Int16 value)
+        public static async Task SwitchAppliance(int applianceID, short value)
         {
             await _database.CallSPNonQueryAsync("States_ChangeState",
                 new SqlParameter("@AccountID", SqlDbType.Int) { Value = _account.ID },
                 new SqlParameter("@ApplianceID", SqlDbType.Int) { Value = applianceID },
                 new SqlParameter("@Value", SqlDbType.SmallInt) { Value = value });
+            var pin = await _database.CallSPScalarAsync("PinID", "Appliances_GetPin",
+                new SqlParameter("@ApplianceID", SqlDbType.Int) { Value = applianceID });
+            var name = await _database.CallSPScalarAsync("Name", "Appliances_GetName",
+                new SqlParameter("@ApplianceID", SqlDbType.Int) { Value = applianceID });
+            switch ((int)pin)
+            {
+                case 1:
+                    if (value == 0)
+                    {
+                        _microcontroller.SendCommand(Microcontroller.Command.TurnOffSocketA);
+                        await Log("SWITCH", string.Format("{0} has been turned {1}."));
+                    }
+                    else
+                    {
+                        _microcontroller.SendCommand(Microcontroller.Command.TurnOnSocketA);
+                        await Log("SWITCH", string.Format("{0} has been turned {1}."));
+                    }
+                    break;
+                case 2:
+                    if (value == 0)
+                    {
+                        _microcontroller.SendCommand(Microcontroller.Command.TurnOffSocketB);
+                        await Log("SWITCH", string.Format("{0} has been turned {1}."));
+                    }
+                    else
+                    {
+                        _microcontroller.SendCommand(Microcontroller.Command.TurnOnSocketB);
+                        await Log("SWITCH", string.Format("{0} has been turned {1}."));
+                    }
+                    break;
+                default: break;
+            }
+        }
+
+        public static async Task<DataTable> GetAppliances()
+        {
+            return await _database.CallSPReaderAsync("Appliances", "Appliances_GetAppliances");
+        }
+
+        public static bool LoadMicrocontroller(string portName = "")
+        {
+            if (portName == "")
+            {
+                if (System.IO.File.Exists("port.txt"))
+                {
+                    _microcontroller = new Microcontroller(System.IO.File.ReadAllText("port.txt"), 9600);
+                    return true;
+                }
+                else return false;
+            }
+            else
+            {
+                _microcontroller = new Microcontroller(portName, 9600);
+                System.IO.File.WriteAllText("port.txt", portName);
+                return true;
+            }
+        }
+
+        public static void Open()
+        {
+            _microcontroller.Open();
+        }
+
+        public static void Close()
+        {
+            _microcontroller.Close();
         }
         #endregion
 
@@ -211,6 +282,7 @@ namespace BusinessLogic
                 new SqlParameter("@Repitition", SqlDbType.Char, 7) { Value = repitition },
                 new SqlParameter("@LowerLimit", SqlDbType.DateTime) { Value = lowerLimit },
                 new SqlParameter("@UpperLimit", SqlDbType.DateTime) { Value = upperLimit });
+            await Log("NOTIFY", "Schedule added.");
         }
 
         public static async Task EditSchedule(int scheduleID, int applianceID, bool value, string scheduleType, string repitition, DateTime lowerLimit, DateTime upperLimit)
@@ -223,6 +295,12 @@ namespace BusinessLogic
                 new SqlParameter("@Repitition", SqlDbType.Char, 7) { Value = repitition },
                 new SqlParameter("@LowerLimit", SqlDbType.DateTime) { Value = lowerLimit },
                 new SqlParameter("@UpperLimit", SqlDbType.DateTime) { Value = upperLimit });
+            await Log("NOTIFY", string.Format("Schedule {0} edited.", scheduleID));
+        }
+
+        public static async Task<DataTable> GetSchedules()
+        {
+            return await _database.CallSPReaderAsync("Schedules", "Schedules_GetSchedules");
         }
         #endregion
 
@@ -231,12 +309,37 @@ namespace BusinessLogic
         //
         #region Log
 
-        public static async Task Log(int accountID, string importance, string message)
+        public static async Task<DataTable> GetLogs()
+        {
+            return await _database.CallSPReaderAsync("HomeLogs", "Logs_Home");
+        }
+
+        public static async Task Log(string importance, string message)
         {
             await _database.CallSPNonQueryAsync("Logs_Log",
-                new SqlParameter("@AccountID", SqlDbType.Int) { Value = accountID },
+                new SqlParameter("@AccountID", SqlDbType.Int) { Value = _account.ID },
                 new SqlParameter("@Importance", SqlDbType.Char, 8) { Value = importance },
                 new SqlParameter("@Message", SqlDbType.VarChar, 100) { Value = message });
+        }
+
+        public static async Task<DataTable> GetDailyLogs()
+        {
+            return await _database.CallSPReaderAsync("DailyLogs", "Logs_DailyReports");
+        }
+
+        public static async Task<DataTable> GetWeeklyLogs()
+        {
+            return await _database.CallSPReaderAsync("WeeklyLogs", "Logs_WeekReports");
+        }
+
+        public static async Task<DataTable> GetMonthlyLogs()
+        {
+            return await _database.CallSPReaderAsync("MonthlyLogs", "Logs_MonthlyReports");
+        }
+
+        public static async Task<DataTable> GetYearlyLogs()
+        {
+            return await _database.CallSPReaderAsync("YearlyLogs", "Logs_YearlyReports");
         }
         #endregion
         #endregion
