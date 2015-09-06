@@ -273,11 +273,25 @@ END
 RETURN
 
 /* Logs_Log */
-CREATE PROCEDURE Logs_Log @AccountID INT = NULL, @Importance CHAR(8), @Message VARCHAR(100)
+CREATE PROCEDURE Logs_Log @AccountID INT = NULL, @DateTime DATETIME = NULL, @Importance CHAR(8), @Message VARCHAR(100)
 AS
 BEGIN
 	BEGIN TRY
-		INSERT INTO ApplicationLogs(AccountID, [DateTime], Importance, [Message]) VALUES(@AccountID, GETDATE(), @Importance, @Message);
+		INSERT INTO ApplicationLogs(AccountID, [DateTime], Importance, [Message]) VALUES(@AccountID, COALESCE(@DateTime, GETDATE()), @Importance, @Message);
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+DROP PROCEDURE Logs_Log
+
+/* Logs_Home */
+CREATE PROCEDURE Logs_Home
+AS
+BEGIN
+	BEGIN TRY
+		SELECT * FROM ApplicationLogs ORDER BY [DateTime] DESC;
 	END TRY
 	BEGIN CATCH
 		EXECUTE General_Error;
@@ -341,19 +355,6 @@ BEGIN
 		SELECT * FROM ApplicationLogs WHERE
 		YEAR([DateTime]) = YEAR(GETDATE())
 		ORDER BY [DateTime] DESC;
-	END TRY
-	BEGIN CATCH
-		EXECUTE General_Error;
-	END CATCH
-END
-RETURN
-
-/* Logs_Home */
-CREATE PROCEDURE Logs_Home
-AS
-BEGIN
-	BEGIN TRY
-		SELECT * FROM ApplicationLogs ORDER BY [DateTime] DESC;
 	END TRY
 	BEGIN CATCH
 		EXECUTE General_Error;

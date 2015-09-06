@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using BusinessLogic;
 
 namespace Wpf_SysAdUI
 {
@@ -162,9 +163,9 @@ namespace Wpf_SysAdUI
                 consump_prev.Text = ec_tb.Text + " Watts";
         }
 
-        private void create_btn_Click(object sender, RoutedEventArgs e)
+        private async void create_btn_Click(object sender, RoutedEventArgs e)
         {
-
+            await Globals.AddAppliance();
         }
 
     }
