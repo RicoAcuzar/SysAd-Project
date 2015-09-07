@@ -60,9 +60,9 @@ namespace Wpf_SysAdUI
                 //
                 schedules.Add(new Schedule()
                 {
-                    ScheduleID = (int)table.Rows[i][0],
-                    ApplianceID = (int)table.Rows[i][1],
-                    SetValue = (short)table.Rows[i][2],
+                    ScheduleID = Convert.ToInt32(table.Rows[i][0]),
+                    ApplianceID = Convert.ToInt32(table.Rows[i][1]),
+                    SetValue = Convert.ToInt16(table.Rows[i][2]),
                     ScheduleType = table.Rows[i][3].ToString(),
                     Repetition = table.Rows[i][4].ToString(),
                     LowerLimit = DateTime.Parse(table.Rows[i][5].ToString()),

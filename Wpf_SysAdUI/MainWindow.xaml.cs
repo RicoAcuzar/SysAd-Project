@@ -24,6 +24,7 @@ namespace Wpf_SysAdUI
     public partial class MainWindow 
     {
         private List<Tuple<int, string>> users;
+        private List<Appliance> appliances;
 
         //
         // Animation Codes
@@ -40,6 +41,7 @@ namespace Wpf_SysAdUI
             lvUsers.ItemsSource = items;
             reports.ItemsSource = items;*/
             users = new List<Tuple<int, string>>();
+            appliances = new List<Appliance>();
         }
 
         private void SlideBar_MouseEnter(object sender, MouseEventArgs e)
@@ -81,15 +83,58 @@ namespace Wpf_SysAdUI
             if (System.IO.File.Exists("kwh.txt") && double.TryParse(System.IO.File.ReadAllText("kwh.txt"), out kwh))
                 set_kwh_tb.Text = (Globals.KWH = kwh).ToString();
             else set_kwh_tb.Text = (Globals.KWH = 0d).ToString();
-            //if (Globals.LoadMicrocontroller("COM3")) Globals.Open();
+            if (Globals.LoadMicrocontroller("COM3")) Globals.Open();
+            await LoadHomeLogs();
+            //add appliance list here
+            var apps = await Globals.GetAppliances();
+            for (int i = 0; i < apps.Rows.Count; i++)
+            {
+                appliances.Add(new Appliance(){
+                    ApplianceID = Convert.ToInt32(apps.Rows[i][0]),
+                    Name = apps.Rows[i][1].ToString(),
+                    Location = apps.Rows[i][2].ToString(),
+                    ApplianceType = apps.Rows[i][3].ToString(),
+                    Wattage = Convert.ToInt32(apps.Rows[i][4]),
+                    PinID = Convert.ToInt16(apps.Rows[i][5]),
+                    IsDigital = Convert.ToBoolean(apps.Rows[i][6]),
+                    Active = Convert.ToBoolean(apps.Rows[i][7]),
+                    Restricted = Convert.ToBoolean(apps.Rows[i][8]),
+                    AddedBy = Convert.ToInt32(apps.Rows[i][9])
+                });
+                Image im = new Image();
+                // TODO: fix static diretory
+                im.Source = new BitmapImage(new Uri(@"file:///Repositories/SysAd-Project/Wpf_SysAdUI/icon.png"));
+                //@"..\..\Icons\Electronic Icons White 64px (0).png"
+                Add_Appliances(apps.Rows[i][0].ToString(), apps.Rows[i][1].ToString(), apps.Rows[i][2].ToString(), apps.Rows[i][4].ToString(), im);
+            }
 
+            UpdateStatus();
+        }
+
+        /*private BitmapSource LoadImage(byte[] imageData)
+        {
+            using (var ms = new System.IO.MemoryStream(imageData))
+            {
+                var decoder = BitmapDecoder.Create(ms, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.OnLoad);
+                return decoder.Frames[0];
+            }
+        }*/
+
+        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Globals.Close();
+        }
+
+        private async Task LoadHomeLogs()
+        {
             var usrs = await Globals.GetUsers();
             for (int i = 0; i < usrs.Rows.Count; i++)
                 users.Add(new Tuple<int, string>((int)usrs.Rows[i][0], usrs.Rows[i][1].ToString()));
             List<Log> lhl = new List<Log>();
             var logs = await Globals.GetLogs();
             for (int i = 0; i < logs.Rows.Count; i++)
-                lhl.Add(new Log() {
+                lhl.Add(new Log()
+                {
                     DateAndTime = string.Format("{0:dddd, MMMM d, yyyy h:m:s tt}", DateTime.Parse(logs.Rows[i][1].ToString())),
                     User = users.Find(x => x.Item1 == (int)logs.Rows[i][0]).Item2,
                     Event = logs.Rows[i][3].ToString()
@@ -97,9 +142,17 @@ namespace Wpf_SysAdUI
             lvUsers.ItemsSource = lhl;
         }
 
-        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void UpdateStatus()
         {
-            //Globals.Close();
+            byte count = 0;
+            for (byte i = 0; i < 2; i++)
+                if (Globals.Microcontroller.States[i])
+                    count++;
+            if (count == 1)
+                lbl_usage.Content = "There is one active device.";
+            else if (count == 2)
+                lbl_usage.Content = "There are two active devices.";
+            else lbl_usage.Content = "There are currently no active device.";
         }
 
         void dispatch_Tick(object sender, EventArgs e)
@@ -324,7 +377,7 @@ namespace Wpf_SysAdUI
 
         private void rep_pan_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            MessageBox.Show("Please Fix Functionalities esp. Sorting by weekly.Thank you!", "WAIT", MessageBoxButton.OK, MessageBoxImage.Information);
+            //MessageBox.Show("Please Fix Functionalities esp. Sorting by weekly.Thank you!", "WAIT", MessageBoxButton.OK, MessageBoxImage.Information);
             HomeUI_inner.Visibility = Visibility.Collapsed;
             StatUI_inner.Visibility = Visibility.Collapsed;
             RepUI_inner.Visibility = Visibility.Visible;
@@ -835,7 +888,7 @@ namespace Wpf_SysAdUI
             save_btn.IsEnabled = false;
         }
 
-        public void Add_Appliances(string devName, string devLoc, string watts, Image sa)
+        public void Add_Appliances(string appID, string devName, string devLoc, string watts, Image sa)
         {
             WrapPanel panel = (WrapPanel)FindName("App_stack");
             WrapPanel panel2 = (WrapPanel)FindName("Stat_stack");
@@ -854,16 +907,36 @@ namespace Wpf_SysAdUI
             info.ToolTip = "Turns your appliances On or Off.";
 
             Grid grid = new Grid();
+            grid.Name = "g1";
             grid.Height = 140;
             grid.Width = 140;
             grid.Margin = new Thickness(5);
             grid.Background = new SolidColorBrush(Colors.SkyBlue);
 
             Grid grid2 = new Grid();
+            grid2.Name = "g2";
             grid2.Height = 140;
             grid2.Width = 140;
             grid2.Margin = new Thickness(5);
             grid2.Background = new SolidColorBrush(Colors.SkyBlue);
+
+            TextBlock id = new TextBlock();
+            id.Name = "txtbx_ID";
+            id.Visibility = System.Windows.Visibility.Hidden;
+            id.Text = appID;
+            id.FontSize = 16;
+            id.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            id.TextAlignment = TextAlignment.Center;
+            id.Margin = new Thickness(5, 64, 5, 47);
+
+            TextBlock id2 = new TextBlock();
+            id2.Name = "txtbx_ID2";
+            id2.Visibility = System.Windows.Visibility.Hidden;
+            id2.Text = appID;
+            id2.FontSize = 16;
+            id2.Foreground = new SolidColorBrush(Color.FromRgb(255, 255, 255));
+            id2.TextAlignment = TextAlignment.Center;
+            id2.Margin = new Thickness(5, 64, 5, 47);
 
             TextBlock name = new TextBlock();
             name.Text = devName;
@@ -908,12 +981,19 @@ namespace Wpf_SysAdUI
             toggle.HorizontalAlignment = HorizontalAlignment.Center;
             ScaleTransform size = new ScaleTransform(1, 0.5);
             toggle.RenderTransform = size;
+            toggle.IsCheckedChanged += async (sender, e) => {
+                await Globals.ToggleApplianceState(Convert.ToInt32(((ToggleSwitch)sender).TryFindParent<Grid>().FindChild<TextBlock>("txtbx_ID2").Text));
+                await LoadHomeLogs();
+                UpdateStatus();
+            };
 
+            grid.Children.Add(id);
             grid.Children.Add(name);
             grid.Children.Add(loc);
             grid.Children.Add(w);
             grid.Children.Add(i);
-            
+
+            grid2.Children.Add(id2);
             grid2.Children.Add(name2);
             grid2.Children.Add(loc2);
             grid2.Children.Add(i2);
@@ -935,7 +1015,8 @@ namespace Wpf_SysAdUI
             //data from selected device will go to textboxes in Add_app form 
             //to edit and delete
             //paki lagyan nalang ng delete button sa Add_app form
-            MessageBox.Show("Please read the comments in the code. Thanks.", "No function yet", MessageBoxButton.OK, MessageBoxImage.Information);
+            //await Globals.ToggleApplianceState(Convert.ToInt32(((Grid)sender).FindChild<TextBlock>("txtbx_ID").Text));
+            //await LoadHomeLogs();
         }
 
         void grid_MouseLeave(object sender, MouseEventArgs e)

@@ -130,7 +130,10 @@ namespace Wpf_SysAdUI
         private void create_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(create_btn, 0.5, TimeSpan.FromMilliseconds(0));
-            main.Add_Appliances(devname_tb.Text, devloc_tb.Text, ec_tb.Text, logo);
+            //
+            // TODO: save image with filename as ApplianceID then retrieve it when load
+            //
+            //main.Add_Appliances(devname_tb.Text, devloc_tb.Text, ec_tb.Text, logo);
             this.Close();
         }
 
@@ -163,9 +166,16 @@ namespace Wpf_SysAdUI
                 consump_prev.Text = ec_tb.Text + " Watts";
         }
 
-        private async void create_btn_Click(object sender, RoutedEventArgs e)
+        private void create_btn_Click(object sender, RoutedEventArgs e)
         {
-            await Globals.AddAppliance();
+            double watt;
+            if (!double.TryParse(ec_tb.Text, out watt))
+            {
+                MessageBox.Show("Please enter a valid wattage.");
+                return;
+            }
+            // TODO: add the required fields
+            //await Globals.AddAppliance(TEXTBOXNAMEHERE.TEXT, devname_tb.Text, PINIDHERE);
         }
 
     }

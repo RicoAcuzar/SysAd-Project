@@ -63,6 +63,14 @@ namespace BusinessLogic
             get { return _kwh; }
             set { _kwh = value; }
         }
+
+        /// <summary>
+        /// Gets the details of microcontroller.
+        /// </summary>
+        public static Microcontroller Microcontroller
+        {
+            get { return _microcontroller; }
+        }
         #endregion
 
 
@@ -167,11 +175,12 @@ namespace BusinessLogic
         //
         #region Appliances
 
-        public static async Task AddAppliance(string name, string type, double wattage, byte pinID)
+        public static async Task AddAppliance(string name, string location, string type, double wattage, byte pinID)
         {
             await _database.CallSPNonQueryAsync("Appliances_AddAppliance",
                 new SqlParameter("@Name", SqlDbType.Char, 16) { Value = name },
                 new SqlParameter("@ApplianceType", SqlDbType.Char, 16) { Value = type },
+                new SqlParameter("@Location", SqlDbType.Char, 16) { Value = location },
                 new SqlParameter("@Wattage", SqlDbType.Real) { Value = wattage },
                 new SqlParameter("@PinID", SqlDbType.TinyInt) { Value = pinID },
                 new SqlParameter("@IsDigital", SqlDbType.Bit) { Value = 1 },
@@ -180,11 +189,12 @@ namespace BusinessLogic
                 new SqlParameter("@AddedBy", SqlDbType.Int) { Value = _account.ID });
         }
 
-        public static async Task EditAppliance(int applianceID, string name, string type, double wattage, byte pinID, bool active, bool restricted)
+        public static async Task EditAppliance(int applianceID, string name, string location, string type, double wattage, byte pinID, bool active, bool restricted)
         {
             await _database.CallSPNonQueryAsync("Appliances_EditAppliance",
                 new SqlParameter("@ApplianceID", SqlDbType.Int) { Value = applianceID },
                 new SqlParameter("@Name", SqlDbType.Char, 16) { Value = name },
+                new SqlParameter("@Location", SqlDbType.Char, 16) { Value = location },
                 new SqlParameter("@ApplianceType", SqlDbType.Char, 16) { Value = type },
                 new SqlParameter("@Wattage", SqlDbType.Real) { Value = wattage },
                 new SqlParameter("@PinID", SqlDbType.TinyInt) { Value = pinID },
@@ -193,6 +203,46 @@ namespace BusinessLogic
                 new SqlParameter("@Restricted", SqlDbType.Bit) { Value = restricted });
         }
 
+        public static async Task ToggleApplianceState(int applianceID)
+        {
+            var appl = await _database.CallSPReaderAsync("Appliances", "Appliances_GetAppliance",
+                new SqlParameter("@ApplianceID", SqlDbType.Int) { Value = applianceID });
+            if (appl == null) return;
+            switch (Convert.ToInt32(appl.Rows[0][5]))
+            {
+                case 1:
+                    if (_microcontroller.States[0])
+                    {
+                        _microcontroller.SendCommand(Microcontroller.Command.TurnOffSocketA);
+                        _microcontroller.States[0] = false;
+                        await Log("SWITCH", string.Format("{0} at {1} has been turned {2}.", appl.Rows[0][1].ToString().Trim(), appl.Rows[0][2].ToString().Trim(), "Off"));
+                    }
+                    else
+                    {
+                        _microcontroller.SendCommand(Microcontroller.Command.TurnOnSocketA);
+                        _microcontroller.States[0] = true;
+                        await Log("SWITCH", string.Format("{0} at {1} has been turned {2}.", appl.Rows[0][1].ToString().Trim(), appl.Rows[0][2].ToString().Trim(), "On"));
+                    }
+                    break;
+                case 2:
+                    if (_microcontroller.States[1])
+                    {
+                        _microcontroller.SendCommand(Microcontroller.Command.TurnOffSocketB);
+                        _microcontroller.States[1] = false;
+                        await Log("SWITCH", string.Format("{0} at {1} has been turned {2}.", appl.Rows[0][1].ToString().Trim(), appl.Rows[0][2].ToString().Trim(), "Off"));
+                    }
+                    else
+                    {
+                        _microcontroller.SendCommand(Microcontroller.Command.TurnOnSocketB);
+                        _microcontroller.States[1] = true;
+                        await Log("SWITCH", string.Format("{0} at {1} has been turned {2}.", appl.Rows[0][1].ToString().Trim(), appl.Rows[0][2].ToString().Trim(), "On"));
+                    }
+                    break;
+                default: break;
+            }
+        }
+
+        // TODO: string.Format replacements
         public static async Task SwitchAppliance(int applianceID, short value)
         {
             await _database.CallSPNonQueryAsync("States_ChangeState",
@@ -320,6 +370,11 @@ namespace BusinessLogic
                 new SqlParameter("@AccountID", SqlDbType.Int) { Value = _account.ID },
                 new SqlParameter("@Importance", SqlDbType.Char, 8) { Value = importance },
                 new SqlParameter("@Message", SqlDbType.VarChar, 100) { Value = message });
+        }
+
+        public static async Task ClearLogs()
+        {
+            await _database.CallSPNonQueryAsync("Logs_ClearLogs");
         }
 
         public static async Task<DataTable> GetDailyLogs()

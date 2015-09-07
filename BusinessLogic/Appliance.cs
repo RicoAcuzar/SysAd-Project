@@ -15,6 +15,7 @@ namespace BusinessLogic
 
         public int ApplianceID { get; set; }
         public string Name { get; set; }
+        public string Location { get; set; }
         public string ApplianceType { get; set; }
         public double Wattage { get; set; }
         public short PinID { get; set; }
@@ -37,6 +38,7 @@ namespace BusinessLogic
         {
             ApplianceID = -1;
             Name = "";
+            Location = "";
             ApplianceType = "";
             Wattage = -1d;
             PinID = -1;
@@ -49,10 +51,11 @@ namespace BusinessLogic
         /// <summary>
         /// Creates an instance of this class.
         /// </summary>
-        public Appliance(int applianceID, string name, string applianceType, double wattage, short pinID, bool isDigital, bool active, bool restricted, int addedBy)
+        public Appliance(int applianceID, string name, string location, string applianceType, double wattage, short pinID, bool isDigital, bool active, bool restricted, int addedBy)
         {
             ApplianceID = applianceID;
             Name = name;
+            Location = location;
             ApplianceType = applianceType;
             Wattage = wattage;
             PinID = pinID;

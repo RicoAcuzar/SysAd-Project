@@ -137,11 +137,11 @@
                         <Path Style="{StaticResource InfoIcon}" Fill="#FF9696F9" Margin="99.167,16.416,0,16.416" Stretch="Fill" Height="77.168" Width="79.833"/>
                         <Label Name="lbl_usage" FontSize="30" Content="There are currently no active devices." Foreground="#FFBB6767" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="40,0,0,0"/>
                     </StackPanel>
-                    <ListView Margin="10,138,10,120" Name="lvUsers" >
+                    <ListView Margin="10,138,10,20" Name="lvUsers" >
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="Date" Width="220" DisplayMemberBinding="{Binding DateAndTime}" />
-                                <GridViewColumn Header="User" Width="150" DisplayMemberBinding="{Binding User}"/>
+                                <GridViewColumn Header="Date" Width="240" DisplayMemberBinding="{Binding DateAndTime}" />
+                                <GridViewColumn Header="User" Width="130" DisplayMemberBinding="{Binding User}"/>
                                 <GridViewColumn Header="Event" Width="438" DisplayMemberBinding="{Binding Event}"/>
                             </GridView>
                         </ListView.View>

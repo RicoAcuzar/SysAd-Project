@@ -17,6 +17,7 @@ CREATE TABLE Appliances
 (
 ApplianceID INT PRIMARY KEY IDENTITY(0,1),
 Name CHAR(16) NOT NULL,
+Location CHAR(16) NOT NULL,
 ApplianceType CHAR(16) NOT NULL,
 Wattage REAL NOT NULL,
 PinID TINYINT NOT NULL,
@@ -85,7 +86,6 @@ BEGIN
 END
 RETURN
 
-SELECT * FROM Accounts;
 /* Accounts_ChangePassword */
 /*CREATE PROCEDURE Accounts_ChangePassword @Username CHAR(16), @Password CHAR(96), @Salt CHAR(8)
 AS
@@ -178,7 +178,7 @@ END
 RETURN
 
 /* Appliances_AddAppliance */
-CREATE PROCEDURE Appliances_AddAppliance @Name CHAR(16), @ApplianceType CHAR(16), @Wattage REAL, @PinID TINYINT, @IsDigital BIT, @Active BIT, @Restricted BIT, @AddedBy INT
+CREATE PROCEDURE Appliances_AddAppliance @Name CHAR(16), @Location CHAR(16), @ApplianceType CHAR(16), @Wattage REAL, @PinID TINYINT, @IsDigital BIT, @Active BIT, @Restricted BIT, @AddedBy INT
 AS
 BEGIN
 	BEGIN TRY
@@ -188,7 +188,7 @@ BEGIN
 			EXECUTE General_Error @ErrorNumber=1, @ErrorSeverity=1, @ErrorState=1, @ErrorProcedure='Appliances_AddAppliance', @ErrorLine=1, @ErrorMessage='The digital or analog pin overlap detected.';
 		ELSE
 			BEGIN
-				INSERT INTO Appliances(Name, ApplianceType, Wattage, PinID, IsDigital, Active, Restricted, AddedBy) VALUES (@Name, @ApplianceType, @Wattage, @PinID, @IsDigital, @Active, @Restricted, @AddedBy);
+				INSERT INTO Appliances(Name, Location, ApplianceType, Wattage, PinID, IsDigital, Active, Restricted, AddedBy) VALUES (@Name, @Location, @ApplianceType, @Wattage, @PinID, @IsDigital, @Active, @Restricted, @AddedBy);
 			END
 	END TRY
 	BEGIN CATCH
@@ -198,12 +198,13 @@ END
 RETURN
 
 /* Appliances_EditAppliance */
-CREATE PROCEDURE Appliances_EditAppliance @ApplianceID INT, @Name CHAR(16) = NULL, @ApplianceType CHAR(16) = NULL, @Wattage REAL = NULL, @PinID TINYINT = NULL, @IsDigital BIT = NULL, @Active BIT = NULL, @Restricted BIT = NULL, @AddedBy INT = NULL
+CREATE PROCEDURE Appliances_EditAppliance @ApplianceID INT, @Name CHAR(16) = NULL, @Location CHAR(16) = NULL, @ApplianceType CHAR(16) = NULL, @Wattage REAL = NULL, @PinID TINYINT = NULL, @IsDigital BIT = NULL, @Active BIT = NULL, @Restricted BIT = NULL, @AddedBy INT = NULL
 AS
 BEGIN
 	BEGIN TRY
 		UPDATE Appliances SET
 		Name=COALESCE(@Name, Name),
+		Location=COALESCE(@Location, Location),
 		ApplianceType=COALESCE(@ApplianceType, ApplianceType),
 		Wattage=COALESCE(@Wattage, Wattage),
 		PinID=COALESCE(@PinID, PinID),
@@ -258,6 +259,19 @@ BEGIN
 END
 RETURN
 
+/* Appliances_GetAppliance */
+CREATE PROCEDURE Appliances_GetAppliance @ApplianceID INT
+AS
+BEGIN
+	BEGIN TRY
+		SELECT * FROM Appliances WHERE ApplianceID=@ApplianceID;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
 /* Proc_StateChanges */
 CREATE PROCEDURE States_ChangeState @AccountID INT, @ApplianceID INT, @Value SMALLINT, @DateAndTime DATETIME = NULL
 AS
@@ -284,7 +298,6 @@ BEGIN
 	END CATCH
 END
 RETURN
-DROP PROCEDURE Logs_Log
 
 /* Logs_Home */
 CREATE PROCEDURE Logs_Home
@@ -292,6 +305,19 @@ AS
 BEGIN
 	BEGIN TRY
 		SELECT * FROM ApplicationLogs ORDER BY [DateTime] DESC;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Logs_ClearLogs */
+CREATE PROCEDURE Logs_ClearLogs
+AS
+BEGIN
+	BEGIN TRY
+		DELETE FROM ApplicationLogs;
 	END TRY
 	BEGIN CATCH
 		EXECUTE General_Error;
@@ -513,16 +539,14 @@ EXECUTE Accounts_Register @Username='user', @Password='sUNhQEwHj/1UnAPbRDw/7eLz5
 SELECT * FROM Accounts;
 
 /* Appliances */
-EXECUTE	Appliances_AddAppliance @Name='Light1', @ApplianceType='Light', @Wattage=20, @PinID=1, @IsDigital=1, @Active=1, @Restricted=0, @AddedBy=0;
-EXECUTE	Appliances_AddAppliance @Name='Light2', @ApplianceType='Light', @Wattage=30, @PinID=2, @IsDigital=1, @Active=1, @Restricted=0, @AddedBy=0;
+EXECUTE	Appliances_AddAppliance @Name='Light1', @Location='Living Room', @ApplianceType='Light', @Wattage=20, @PinID=1, @IsDigital=1, @Active=1, @Restricted=0, @AddedBy=0;
+EXECUTE	Appliances_AddAppliance @Name='Light2', @Location='Bed Room', @ApplianceType='Light', @Wattage=30, @PinID=2, @IsDigital=1, @Active=1, @Restricted=0, @AddedBy=0;
 SELECT * FROM Appliances;
 
 /* StateChanges */
 EXECUTE States_ChangeState @AccountID=0, @ApplianceID=0, @Value=0;
-EXECUTE States_ChangeState @AccountID=0, @ApplianceID=1, @Value=0;
 SELECT * FROM StateChanges;
 EXECUTE States_ChangeState @AccountID=0, @ApplianceID=0, @Value=1;
-EXECUTE States_ChangeState @AccountID=0, @ApplianceID=1, @Value=1;
 
 /* ApplicationLogs */
 EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='asdfasdfasdf';
@@ -535,3 +559,4 @@ EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='uio;iyol';
 EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='567yuk';
 EXECUTE Logs_Log @AccountID=0, @Importance='NOTIFY', @Message='4ywertyerty';
 EXECUTE Logs_Home;
+EXECUTE Logs_ClearLogs;
