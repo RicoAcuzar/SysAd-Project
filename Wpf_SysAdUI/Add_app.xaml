@@ -61,19 +61,19 @@
         <Label Content="Electric Consumption:" Foreground="#FF3E3E7C" 
                FontSize="16" Margin="10,88,490,253"/>
         <Label Content="Select Icon:" Foreground="#FF3E3E7C" 
-               FontSize="16" Margin="12,120,372,217"/>
+               FontSize="16" Margin="12,167,372,170"/>
         <Label Content="Preview:" Foreground="#FF3E3E7C" 
         	FontSize="16" Margin="412,54,88,287"/>
         <TextBox Controls:TextBoxHelper.Watermark="Device type"
                  Controls:TextBoxHelper.ClearTextButton="True"
-            Name="devname_tb" Margin="137,30,292,318" TextChanged="devname_tb_TextChanged" />
+            Name="devtype_tb" Margin="137,30,292,318" TextChanged="devname_tb_TextChanged" />
         <TextBox Controls:TextBoxHelper.Watermark="Device location"
                  Controls:TextBoxHelper.ClearTextButton="True"
             Name="devloc_tb" Margin="137,62,292,286" TextChanged="devloc_tb_TextChanged"  />
         <TextBox Controls:TextBoxHelper.Watermark="Watts"
                  Controls:TextBoxHelper.ClearTextButton="True"
             Name="ec_tb" Margin="174,93,400,255" TextChanged="ec_tb_TextChanged"  />
-        <Grid Margin="0,149,292,37">
+        <Grid Margin="0,204,292,37">
             <ScrollViewer Margin="10" VerticalScrollBarVisibility="Auto">
                 <WrapPanel x:Name="stack" Background="#19000000" ScrollViewer.VerticalScrollBarVisibility="Auto">
                 </WrapPanel>

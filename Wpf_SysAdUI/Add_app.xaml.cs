@@ -166,16 +166,21 @@ namespace Wpf_SysAdUI
                 consump_prev.Text = ec_tb.Text + " Watts";
         }
 
-        private void create_btn_Click(object sender, RoutedEventArgs e)
+        private async void create_btn_Click(object sender, RoutedEventArgs e)
         {
             double watt;
+            byte pin;
             if (!double.TryParse(ec_tb.Text, out watt))
             {
                 MessageBox.Show("Please enter a valid wattage.");
                 return;
             }
+            if (!byte.Parse())
+            {
+
+            }
             // TODO: add the required fields
-            //await Globals.AddAppliance(TEXTBOXNAMEHERE.TEXT, devname_tb.Text, PINIDHERE);
+            await Globals.AddAppliance(devname_tb.Text, devloc_tb.Text, devtype_tb.Text, watt, pin);
         }
 
     }

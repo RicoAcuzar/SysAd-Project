@@ -55,9 +55,6 @@ namespace Wpf_SysAdUI
             var table = await Globals.GetSchedules();
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                //
-                // TODO: parse error
-                //
                 schedules.Add(new Schedule()
                 {
                     ScheduleID = Convert.ToInt32(table.Rows[i][0]),

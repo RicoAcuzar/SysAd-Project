@@ -242,7 +242,6 @@ namespace BusinessLogic
             }
         }
 
-        // TODO: string.Format replacements
         public static async Task SwitchAppliance(int applianceID, short value)
         {
             await _database.CallSPNonQueryAsync("States_ChangeState",
@@ -259,24 +258,24 @@ namespace BusinessLogic
                     if (value == 0)
                     {
                         _microcontroller.SendCommand(Microcontroller.Command.TurnOffSocketA);
-                        await Log("SWITCH", string.Format("{0} has been turned {1}."));
+                        await Log("SWITCH", string.Format("{0} at {1} has been turned {2}."));
                     }
                     else
                     {
                         _microcontroller.SendCommand(Microcontroller.Command.TurnOnSocketA);
-                        await Log("SWITCH", string.Format("{0} has been turned {1}."));
+                        await Log("SWITCH", string.Format("{0} at {1} has been turned {2}."));
                     }
                     break;
                 case 2:
                     if (value == 0)
                     {
                         _microcontroller.SendCommand(Microcontroller.Command.TurnOffSocketB);
-                        await Log("SWITCH", string.Format("{0} has been turned {1}."));
+                        await Log("SWITCH", string.Format("{0} at {1} has been turned {2}."));
                     }
                     else
                     {
                         _microcontroller.SendCommand(Microcontroller.Command.TurnOnSocketB);
-                        await Log("SWITCH", string.Format("{0} has been turned {1}."));
+                        await Log("SWITCH", string.Format("{0} at {1} has been turned {2}."));
                     }
                     break;
                 default: break;
