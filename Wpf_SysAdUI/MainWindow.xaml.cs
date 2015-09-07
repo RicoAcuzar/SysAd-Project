@@ -79,12 +79,20 @@ namespace Wpf_SysAdUI
             dispatch.Tick += dispatch_Tick;
             dispatch.Start();
             //////
-            double kwh;
-            if (System.IO.File.Exists("kwh.txt") && double.TryParse(System.IO.File.ReadAllText("kwh.txt"), out kwh))
-                set_kwh_tb.Text = (Globals.KWH = kwh).ToString();
-            else set_kwh_tb.Text = (Globals.KWH = 0d).ToString();
-            if (Globals.LoadMicrocontroller("COM3")) Globals.Open();
-            await LoadHomeLogs();
+            //await Task.Delay(10);
+            try
+            {
+                double kwh;
+                if (System.IO.File.Exists("kwh.txt") && double.TryParse(System.IO.File.ReadAllText("kwh.txt"), out kwh))
+                    set_kwh_tb.Text = (Globals.KWH = kwh).ToString();
+                else set_kwh_tb.Text = (Globals.KWH = 0).ToString();
+                if (Globals.LoadMicrocontroller("COM3")) Globals.Open();
+                await LoadHomeLogs();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             //add appliance list here
             var apps = await Globals.GetAppliances();
             for (int i = 0; i < apps.Rows.Count; i++)
@@ -107,7 +115,6 @@ namespace Wpf_SysAdUI
                 //@"..\..\Icons\Electronic Icons White 64px (0).png"
                 Add_Appliances(apps.Rows[i][0].ToString(), apps.Rows[i][1].ToString(), apps.Rows[i][2].ToString(), apps.Rows[i][4].ToString(), im);
             }
-
             UpdateStatus();
         }
 
@@ -144,7 +151,7 @@ namespace Wpf_SysAdUI
 
         private void UpdateStatus()
         {
-            byte count = 0;
+            /*byte count = 0;
             for (byte i = 0; i < 2; i++)
                 if (Globals.Microcontroller.States[i])
                     count++;
@@ -152,7 +159,8 @@ namespace Wpf_SysAdUI
                 lbl_usage.Content = "There is one active device.";
             else if (count == 2)
                 lbl_usage.Content = "There are two active devices.";
-            else lbl_usage.Content = "There are currently no active device.";
+            else lbl_usage.Content = "There are currently no active device.";*/
+            lbl_usage.Content = "There are currently no active device.";
         }
 
         void dispatch_Tick(object sender, EventArgs e)
@@ -467,7 +475,6 @@ namespace Wpf_SysAdUI
         private void editSched_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(editSched_btn, 0.0, TimeSpan.FromSeconds(0));
-            
         }
 
         private void delSched_btn_PreviewMouseDown(object sender, MouseButtonEventArgs e)
@@ -486,11 +493,11 @@ namespace Wpf_SysAdUI
             }
             else
             {
-                ManageSched m = new ManageSched();
+                ManageSched m = new ManageSched(Convert.ToDateTime(SchedUI_Calendar.SelectedDate));
                 m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.Value.ToLongDateString();
                 m.create_btn.Visibility = Visibility.Collapsed;
                 m.delete_btn.Visibility = Visibility.Collapsed;
-                m.edit_btn.Visibility = Visibility.Collapsed;
+                //m.edit_btn.Visibility = Visibility.Collapsed;
                 m.save_btn.Visibility = Visibility.Collapsed;
                 m.ShowDialog();
             }
@@ -505,15 +512,15 @@ namespace Wpf_SysAdUI
             }
             else
             {
-                ManageSched m = new ManageSched();
+                ManageSched m = new ManageSched(Convert.ToDateTime(SchedUI_Calendar.SelectedDate));
                 m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.Value.ToLongDateString();
                 m.list_sched.IsEnabled = false;
-                m.time_off_tb.IsEnabled = true;
-                m.time_on_tb.IsEnabled = true;
-                m.device_tb.IsEnabled = true;
+                m.dat_tp.IsEnabled = true;
+                m.state_cb.IsEnabled = true;
+                m.device_cb.IsEnabled = true;
                 m.desc_tb.IsEnabled = true;
                 m.delete_btn.Visibility = Visibility.Collapsed;
-                m.edit_btn.Visibility = Visibility.Collapsed;
+                //m.edit_btn.Visibility = Visibility.Collapsed;
                 m.save_btn.Visibility = Visibility.Collapsed;
                 m.ShowDialog();
             }
@@ -528,7 +535,7 @@ namespace Wpf_SysAdUI
             }
             else
             {
-                ManageSched m = new ManageSched();
+                ManageSched m = new ManageSched(Convert.ToDateTime(SchedUI_Calendar.SelectedDate));
                 m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.Value.ToLongDateString();
                 m.delete_btn.Visibility = Visibility.Collapsed;
                 m.create_btn.Visibility = Visibility.Collapsed;
@@ -545,10 +552,10 @@ namespace Wpf_SysAdUI
             }
             else
             {
-                ManageSched m = new ManageSched();
+                ManageSched m = new ManageSched(Convert.ToDateTime(SchedUI_Calendar.SelectedDate));
                 m.Date_lbl.Content = SchedUI_Calendar.SelectedDate.Value.ToLongDateString();
                 m.create_btn.Visibility = Visibility.Collapsed;
-                m.edit_btn.Visibility = Visibility.Collapsed;
+                //m.edit_btn.Visibility = Visibility.Collapsed;
                 m.save_btn.Visibility = Visibility.Collapsed;
                 m.ShowDialog();
             }
@@ -775,11 +782,15 @@ namespace Wpf_SysAdUI
         }
 
 
-        private void AppUI_add_tile_Click(object sender, RoutedEventArgs e)
+        private async void AppUI_add_tile_Click(object sender, RoutedEventArgs e)
         {
-            Add_app add = new Add_app(this);
-            add.ShowDialog();
-           
+            if ((await Globals.PinExists(1)) && (await Globals.PinExists(2)))
+                MessageBox.Show("There are no rooms for more appliances on this device.");
+            else
+            {
+                Add_app add = new Add_app(this);
+                add.ShowDialog();
+            }
         }
 
         private void AccExpander_CNA_pan_MouseDown(object sender, MouseButtonEventArgs e)
@@ -900,11 +911,11 @@ namespace Wpf_SysAdUI
             i2.Margin = new Thickness(10, 10, 10, 81);
             i2.Source = sa.Source;
 
-            Path info = new Path();
+            /*Path info = new Path();
             info.Margin = new Thickness(115, 5, 5, 115);
             info.Style = FindResource("InfoIcon") as Style;
             info.Fill = new SolidColorBrush(Colors.White);
-            info.ToolTip = "Turns your appliances On or Off.";
+            info.ToolTip = "Turns your appliances On or Off.";*/
 
             Grid grid = new Grid();
             grid.Name = "g1";
@@ -998,7 +1009,7 @@ namespace Wpf_SysAdUI
             grid2.Children.Add(loc2);
             grid2.Children.Add(i2);
             grid2.Children.Add(toggle);
-            grid2.Children.Add(info);
+            //grid2.Children.Add(info);
 
             grid.MouseEnter += grid_MouseEnter;
             grid.MouseLeave += grid_MouseLeave;

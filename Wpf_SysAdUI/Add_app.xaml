@@ -55,24 +55,24 @@
     </Controls:MetroWindow.Resources>
     <Grid Background="#FF6ABDDE">
         <Label Content="Device Type:" Foreground="#FF3E3E7C" 
-               FontSize="16" Margin="39,25,527,317" />
+               FontSize="16" Margin="39,41,527,301" />
         <Label Content="Device Location:" Foreground="#FF3E3E7C" 
-               FontSize="16" Margin="12,57,527,287"/>
-        <Label Content="Electric Consumption:" Foreground="#FF3E3E7C" 
-               FontSize="16" Margin="10,88,490,253"/>
+               FontSize="16" Margin="12,73,527,271"/>
+        <Label Content="    Power Rating:" Foreground="#FF3E3E7C" 
+               FontSize="16" Margin="10,104,527,237"/>
         <Label Content="Select Icon:" Foreground="#FF3E3E7C" 
                FontSize="16" Margin="12,167,372,170"/>
         <Label Content="Preview:" Foreground="#FF3E3E7C" 
         	FontSize="16" Margin="412,54,88,287"/>
-        <TextBox Controls:TextBoxHelper.Watermark="Device type"
+        <TextBox Controls:TextBoxHelper.Watermark="Device Type"
                  Controls:TextBoxHelper.ClearTextButton="True"
-            Name="devtype_tb" Margin="137,30,292,318" TextChanged="devname_tb_TextChanged" />
-        <TextBox Controls:TextBoxHelper.Watermark="Device location"
+            Name="devtype_tb" Margin="137,46,292,302" TextChanged="devname_tb_TextChanged" />
+        <TextBox Controls:TextBoxHelper.Watermark="Device Location"
                  Controls:TextBoxHelper.ClearTextButton="True"
-            Name="devloc_tb" Margin="137,62,292,286" TextChanged="devloc_tb_TextChanged"  />
+            Name="devloc_tb" Margin="137,78,292,270" TextChanged="devloc_tb_TextChanged"  />
         <TextBox Controls:TextBoxHelper.Watermark="Watts"
                  Controls:TextBoxHelper.ClearTextButton="True"
-            Name="ec_tb" Margin="174,93,400,255" TextChanged="ec_tb_TextChanged"  />
+            Name="ec_tb" Margin="137,109,437,239" TextChanged="ec_tb_TextChanged"  />
         <Grid Margin="0,204,292,37">
             <ScrollViewer Margin="10" VerticalScrollBarVisibility="Auto">
                 <WrapPanel x:Name="stack" Background="#19000000" ScrollViewer.VerticalScrollBarVisibility="Auto">
@@ -106,6 +106,16 @@
                                   ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
             </Button.Effect>
         </Button>
+        <Label Content="                    Pin:" Foreground="#FF3E3E7C" 
+        	FontSize="16" Margin="10,135,527,206"/>
+        <TextBox Controls:TextBoxHelper.Watermark="Pin"
+        	Controls:TextBoxHelper.ClearTextButton="True"
+        	x:Name="pin_tb" Margin="137,141,437,207" TextChanged="ec_tb_TextChanged"  />
+        <TextBox Controls:TextBoxHelper.Watermark="Device Name"
+        	Controls:TextBoxHelper.ClearTextButton="True"
+        	x:Name="devname_tb" Margin="137,15,292,333" TextChanged="devname_tb_TextChanged" />
+        <Label Content="Device Name:" Foreground="#FF3E3E7C" 
+        	FontSize="16" Margin="39,10,527,332" />
 
 
     </Grid>

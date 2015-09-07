@@ -129,9 +129,6 @@
             </Grid>
             <Grid Name="Inner_UIMain" Opacity="0" Visibility="Collapsed">
                 <Rectangle Margin="110,150,20,20" Stroke="#FF1D97FD"/>
-                <Controls:ToggleSwitch Margin="694,99,179,526" ThumbIndicatorBrush="#FF383A3C" OffSwitchBrush="#CC119EDA" OnSwitchBrush="#CC21F075" Foreground="#FFCB6F5B"/>
-                <Label FontSize="15.8" Foreground="#FFCB6F5B" Content="Edit Mode:" Margin="609,102,263,536" FontWeight="SemiBold"/>
-                <Path Style="{StaticResource InfoIcon}" Fill="#FF7263D3" Margin="770,82.5,179,573.5" Stretch="Fill" Height="15" Width="15" ToolTip="What is this for?"/>
                 <Grid Name="HomeUI_inner" Margin="110,150,20,20" Opacity="100" Visibility="Collapsed">
                     <StackPanel Margin="10,10,10,381" Height="110" Background="#FFD0E0F7" Orientation="Horizontal">
                         <Path Style="{StaticResource InfoIcon}" Fill="#FF9696F9" Margin="99.167,16.416,0,16.416" Stretch="Fill" Height="77.168" Width="79.833"/>

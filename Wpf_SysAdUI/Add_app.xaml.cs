@@ -24,7 +24,7 @@ namespace Wpf_SysAdUI
         int selectedIndex;
         MainWindow main = null;
 
-        public Add_app( MainWindow m)
+        public Add_app(MainWindow m)
         {
             InitializeComponent();
             InitializeStackWrapPanel();
@@ -127,13 +127,41 @@ namespace Wpf_SysAdUI
             Animation.DropShadowOpacity(create_btn, 0.0, TimeSpan.FromMilliseconds(0));
         }
 
-        private void create_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
+        private async void create_btn_PreviewMouseUp(object sender, MouseButtonEventArgs e)
         {
             Animation.DropShadowOpacity(create_btn, 0.5, TimeSpan.FromMilliseconds(0));
-            //
             // TODO: save image with filename as ApplianceID then retrieve it when load
-            //
-            //main.Add_Appliances(devname_tb.Text, devloc_tb.Text, ec_tb.Text, logo);
+            double watt;
+            byte pin;
+            if (!double.TryParse(ec_tb.Text, out watt))
+            {
+                MessageBox.Show("Please enter a valid wattage.");
+                return;
+            }
+            if (!byte.TryParse(pin_tb.Text, out pin))
+            {
+                MessageBox.Show("Please enter a valid pin.");
+                return;
+            }
+            else
+            {
+                if (pin < 1 || pin > 2)
+                {
+                    MessageBox.Show("The only available pins for this device are 1 and 2.");
+                    return;
+                }
+                else
+                {
+                    if (await Globals.PinExists(pin))
+                    {
+                        MessageBox.Show("Pin is already in use.");
+                        return;
+                    }
+                }
+            }
+            await Globals.AddAppliance(devname_tb.Text, devloc_tb.Text, devtype_tb.Text, watt, pin);
+            var appID = await Globals.GetLastAppliance();
+            main.Add_Appliances(appID.Rows[0][0].ToString(), devname_tb.Text, devloc_tb.Text, watt.ToString(), logo);
             this.Close();
         }
 
@@ -166,21 +194,9 @@ namespace Wpf_SysAdUI
                 consump_prev.Text = ec_tb.Text + " Watts";
         }
 
-        private async void create_btn_Click(object sender, RoutedEventArgs e)
+        private void create_btn_Click(object sender, RoutedEventArgs e)
         {
-            double watt;
-            byte pin;
-            if (!double.TryParse(ec_tb.Text, out watt))
-            {
-                MessageBox.Show("Please enter a valid wattage.");
-                return;
-            }
-            if (!byte.Parse())
-            {
-
-            }
-            // TODO: add the required fields
-            await Globals.AddAppliance(devname_tb.Text, devloc_tb.Text, devtype_tb.Text, watt, pin);
+            //event does not fire
         }
 
     }

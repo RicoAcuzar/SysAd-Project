@@ -1,7 +1,9 @@
 ﻿<Controls:MetroWindow xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        xmlns:Custom="http://metro.mahapps.com/winfx/xaml/shared" x:Class="Wpf_SysAdUI.ManageSched"
+        xmlns:Custom="http://metro.mahapps.com/winfx/xaml/shared" 
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        x:Class="Wpf_SysAdUI.ManageSched"
         Height="509.82" Width="460.825" ShowIconOnTitleBar="True" Title="Manage Schedule" Icon="Icons/Screenshot_12_ (1).png" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" BorderBrush="SkyBlue" Loaded="MetroWindow_Loaded">
     <Controls:MetroWindow.Resources>
         <Style x:Key="Shit" TargetType="{x:Type Button}">
@@ -52,7 +54,7 @@
         </Style>
     </Controls:MetroWindow.Resources>
     <Grid Background="#FF6ABDDE">
-        <Button x:Name="create_btn" Content="Create" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" PreviewMouseDown="create_btn_PreviewMouseDown" PreviewMouseUp="create_btn_PreviewMouseUp" Style="{DynamicResource Shit}" Margin="200,428,148,24" >
+        <Button x:Name="create_btn" Content="Create" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" PreviewMouseDown="create_btn_PreviewMouseDown" PreviewMouseUp="create_btn_PreviewMouseUp" Style="{DynamicResource Shit}" Margin="200,428,148,24" Click="create_btn_Click" >
             <Button.Effect>
                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
             </Button.Effect>
@@ -73,28 +75,20 @@
             </ListView.View>
         </ListView>
         <Label Name="Date_lbl" Margin="10" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" />
-        <TextBox Name="time_on_tb" IsEnabled="False"
-            Controls:TextBoxHelper.Watermark="Time on"
-            Margin="10,312,373,141"/>
-        <TextBox Name="time_off_tb" IsEnabled="False"
-            Controls:TextBoxHelper.Watermark="Time off"
-            Margin="87,312,296,141"/>
-        <TextBox Name="device_tb" IsEnabled="False"
-            Controls:TextBoxHelper.Watermark="Device"
-            Margin="164,312,186,141"/>
+        <xctk:TimePicker Name="dat_tp" HorizontalAlignment="Left" Margin="10,312,0,0" VerticalAlignment="Top" Width="105" Height="28" />
+        <ComboBox Name="state_cb" HorizontalAlignment="Left" Margin="120,312,0,0" VerticalAlignment="Top" Width="72" Height="28" Controls:TextBoxHelper.Watermark="State">
+            <ComboBoxItem Name="cb_on" Content="On"/>
+            <ComboBoxItem Name="cb_off" Content="Off"/>
+        </ComboBox>
+        <ComboBox Name="device_cb" HorizontalAlignment="Left" Margin="197,312,0,0" VerticalAlignment="Top" Width="105" Height="28" Controls:TextBoxHelper.Watermark="Device"/>
         <TextBox Name="desc_tb" IsEnabled="False"
             Controls:TextBoxHelper.Watermark="Description"
-            Margin="274,312,22,141"/>
-        <Label Content="Time on:" FontSize="9" Margin="5,294,378,166"/>
-        <Label Content="Time off:" FontSize="9" Margin="82,294,301,166"/>
-        <Label Content="Device:" FontSize="9" Margin="159,294,224,166"/>
-        <Label Content="Description:" FontSize="9" Margin="269,294,114,166"/>
-        <Button x:Name="save_btn" Content="save" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0"  Style="{DynamicResource Shit}" Margin="200,360,148,91" PreviewMouseDown="save_btn_PreviewMouseDown" PreviewMouseUp="save_btn_PreviewMouseUp" Click="save_btn_Click" >
-            <Button.Effect>
-                <DropShadowEffect Color="Black" Direction="320" ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
-            </Button.Effect>
-        </Button>
-        <Button x:Name="edit_btn" Content="edit" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0" Style="{DynamicResource Shit}" Margin="323,360,25,91" PreviewMouseDown="edit_btn_PreviewMouseDown" PreviewMouseUp="edit_btn_PreviewMouseUp" Click="edit_btn_Click" >
+            Margin="307,312,16,141"/>
+        <Label Content="Date and Time:" FontSize="9" Margin="10,294,373,166"/>
+        <Label Content="State:" FontSize="9" Margin="123,294,260,166"/>
+        <Label Content="Device:" FontSize="9" Margin="200,294,183,166"/>
+        <Label Content="Description:" FontSize="9" Margin="307,294,76,166"/>
+        <Button x:Name="save_btn" Content="save" Foreground="#FF3E3E7C"  Background="#FF527FDE" BorderBrush="#FF527FDE"  VerticalContentAlignment="Stretch" BorderThickness="0"  Style="{DynamicResource Shit}" Margin="85,428,263,23" PreviewMouseDown="save_btn_PreviewMouseDown" PreviewMouseUp="save_btn_PreviewMouseUp" Click="save_btn_Click" >
             <Button.Effect>
                 <DropShadowEffect Color="Black" Direction="320" ShadowDepth="6" BlurRadius="0" Opacity="0.5" />
             </Button.Effect>

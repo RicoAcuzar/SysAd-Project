@@ -86,6 +86,8 @@ namespace BusinessLogic
         {
             _database = new SQLServerDatabase(@"Gamer-PC\SQLEXPRESS", "HCS");
             _account = null;
+            _kwh = 0;
+            _microcontroller = null;
             /*bool flag = false;
             foreach (ConnectionStringSettings css in ConfigurationManager.ConnectionStrings)
             {
@@ -179,8 +181,8 @@ namespace BusinessLogic
         {
             await _database.CallSPNonQueryAsync("Appliances_AddAppliance",
                 new SqlParameter("@Name", SqlDbType.Char, 16) { Value = name },
-                new SqlParameter("@ApplianceType", SqlDbType.Char, 16) { Value = type },
                 new SqlParameter("@Location", SqlDbType.Char, 16) { Value = location },
+                new SqlParameter("@ApplianceType", SqlDbType.Char, 16) { Value = type },
                 new SqlParameter("@Wattage", SqlDbType.Real) { Value = wattage },
                 new SqlParameter("@PinID", SqlDbType.TinyInt) { Value = pinID },
                 new SqlParameter("@IsDigital", SqlDbType.Bit) { Value = 1 },
@@ -287,6 +289,23 @@ namespace BusinessLogic
             return await _database.CallSPReaderAsync("Appliances", "Appliances_GetAppliances");
         }
 
+        public static async Task<DataTable> GetAppliance(int applianceID)
+        {
+            return await _database.CallSPReaderAsync("Appliances", "Appliances_GetAppliance",
+                new SqlParameter("@ApplianceID", SqlDbType.Int) { Value = applianceID });
+        }
+        public static async Task<DataTable> GetLastAppliance()
+        {
+            return await _database.CallSPReaderAsync("Appliances", "Appliances_GetLastAppliance");
+        }
+
+        public static async Task<bool> PinExists(short pin)
+        {
+            var result = await _database.CallSPScalarAsync("PinExists", "Appliances_PinExists",
+                new SqlParameter("@PinID", SqlDbType.TinyInt) { Value = pin });
+            return Convert.ToBoolean(result);
+        }
+
         public static bool LoadMicrocontroller(string portName = "")
         {
             if (portName == "")
@@ -345,6 +364,12 @@ namespace BusinessLogic
                 new SqlParameter("@LowerLimit", SqlDbType.DateTime) { Value = lowerLimit },
                 new SqlParameter("@UpperLimit", SqlDbType.DateTime) { Value = upperLimit });
             await Log("NOTIFY", string.Format("Schedule {0} edited.", scheduleID));
+        }
+
+        public static async Task DeleteSchedule(int scheduleID)
+        {
+            await _database.CallSPNonQueryAsync("Schedules_DeleteSchedule",
+                new SqlParameter("@ScheduleID", SqlDbType.Int) { Value = scheduleID });
         }
 
         public static async Task<DataTable> GetSchedules()

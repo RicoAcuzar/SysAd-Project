@@ -272,6 +272,32 @@ BEGIN
 END
 RETURN
 
+/* Appliances_GetLastAppliance */
+CREATE PROCEDURE Appliances_GetLastAppliance
+AS
+BEGIN
+	BEGIN TRY
+		SELECT * FROM Appliances WHERE ApplianceID=(SELECT MAX(ApplianceID) AS ApplianceID FROM Appliances) ORDER BY ApplianceID DESC;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
+/* Appliances_PinExists */
+CREATE PROCEDURE Appliances_PinExists @PinID TINYINT
+AS
+BEGIN
+	BEGIN TRY
+		SELECT COUNT(*) FROM Appliances WHERE PinID=@PinID;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
 /* Proc_StateChanges */
 CREATE PROCEDURE States_ChangeState @AccountID INT, @ApplianceID INT, @Value SMALLINT, @DateAndTime DATETIME = NULL
 AS
@@ -421,6 +447,19 @@ BEGIN
 END
 RETURN
 
+/* Schedules_DeleteSchedule */
+CREATE PROCEDURE Schedules_DeleteSchedule @ScheduleID INT
+AS
+BEGIN
+	BEGIN TRY
+		DELETE FROM Schedules WHERE ScheduleID=@ScheduleID;
+	END TRY
+	BEGIN CATCH
+		EXECUTE General_Error;
+	END CATCH
+END
+RETURN
+
 /* Schedules_GetSchedules */
 CREATE PROCEDURE Schedules_GetSchedules
 AS
@@ -541,7 +580,9 @@ SELECT * FROM Accounts;
 /* Appliances */
 EXECUTE	Appliances_AddAppliance @Name='Light1', @Location='Living Room', @ApplianceType='Light', @Wattage=20, @PinID=1, @IsDigital=1, @Active=1, @Restricted=0, @AddedBy=0;
 EXECUTE	Appliances_AddAppliance @Name='Light2', @Location='Bed Room', @ApplianceType='Light', @Wattage=30, @PinID=2, @IsDigital=1, @Active=1, @Restricted=0, @AddedBy=0;
+EXECUTE Appliances_GetLastAppliance;
 SELECT * FROM Appliances;
+DELETE FROM Appliances WHERE ApplianceID>0;
 
 /* StateChanges */
 EXECUTE States_ChangeState @AccountID=0, @ApplianceID=0, @Value=0;
