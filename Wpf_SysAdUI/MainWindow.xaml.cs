@@ -86,7 +86,7 @@ namespace Wpf_SysAdUI
                 if (System.IO.File.Exists("kwh.txt") && double.TryParse(System.IO.File.ReadAllText("kwh.txt"), out kwh))
                     set_kwh_tb.Text = (Globals.KWH = kwh).ToString();
                 else set_kwh_tb.Text = (Globals.KWH = 0).ToString();
-                if (Globals.LoadMicrocontroller("COM3")) Globals.Open();
+                //if (Globals.LoadMicrocontroller("COM3")) Globals.Open();
                 await LoadHomeLogs();
             }
             catch (Exception ex)
@@ -129,7 +129,7 @@ namespace Wpf_SysAdUI
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Globals.Close();
+            //Globals.Close();
         }
 
         private async Task LoadHomeLogs()

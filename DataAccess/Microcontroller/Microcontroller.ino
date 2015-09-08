@@ -1,5 +1,5 @@
-const byte socketA=13;
-const byte socketB=13;
+const byte socketA=4;
+const byte socketB=7;
 const byte pin_led=13;
 char buff=0;
 
@@ -18,7 +18,7 @@ void setup() {
   delay(300);
   digitalWrite(socketA, LOW);
   digitalWrite(socketB, LOW);
-  digitalWrite(pin_led, LOW);
+  //digitalWrite(pin_led, LOW);
 }
 
 void loop() {
